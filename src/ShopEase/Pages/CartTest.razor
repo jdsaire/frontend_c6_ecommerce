@@ -1,0 +1,54 @@
+@page "/cart-test"
+@inject Cart Cart
+
+<PageTitle>Cart Test</PageTitle>
+
+<h1>Activity 1: Cart Logic Test</h1>
+
+<p>
+    This is Activity 1's required test program, rendered as a Blazor page instead
+    of printed to a console — this project has no real console, everything shows
+    up in the browser. On first load it seeds three products, adds them to the
+    cart, removes one, then displays whatever <code>Cart</code>'s methods actually
+    produced below.
+</p>
+
+<h2>Cart Contents</h2>
+@if (Cart.Items.Count == 0)
+{
+    <p><em>Cart is empty.</em></p>
+}
+else
+{
+    <ul>
+        @foreach (var line in Cart.DisplayCartItems())
+        {
+            <li>@line</li>
+        }
+    </ul>
+}
+
+<p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Guarded so revisiting this page (or arriving after already using
+        // the cart elsewhere) doesn't re-seed and double the totals — the
+        // demo below only runs once per browser session.
+        if (Cart.Items.Count > 0)
+        {
+            return;
+        }
+
+        var seedProducts = MockProductData.GetSeedProducts();
+
+        // Adds at least two products to the cart, per the brief.
+        Cart.AddProduct(seedProducts[0]); // Laptop
+        Cart.AddProduct(seedProducts[1]); // Wireless Mouse
+        Cart.AddProduct(seedProducts[2]); // Coffee Mug
+
+        // Removes one product by ID.
+        Cart.RemoveProduct(seedProducts[1].ProductID); // removes the Wireless Mouse
+    }
+}
