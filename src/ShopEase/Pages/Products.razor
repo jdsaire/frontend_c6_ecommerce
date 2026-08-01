@@ -1,0 +1,49 @@
+@page "/products"
+@inject Cart Cart
+
+<PageTitle>Products</PageTitle>
+
+<h1>Activity 2: Product Listing</h1>
+
+<p>
+    One <code>ProductCard</code> per seed product. Clicking its "Add to Cart"
+    button calls <code>HandleAddToCart</code> below, which adds that product to
+    the shared <code>Cart</code> and updates the summary beneath the listing.
+</p>
+
+<div class="product-list">
+    @foreach (var product in _products)
+    {
+        <ProductCard Product="product" OnAddToCart="HandleAddToCart" />
+    }
+</div>
+
+<h2>Cart Summary</h2>
+@if (Cart.Items.Count == 0)
+{
+    <p><em>Cart is empty.</em></p>
+}
+else
+{
+    <ul>
+        @foreach (var line in Cart.DisplayCartItems())
+        {
+            <li>@line</li>
+        }
+    </ul>
+}
+<p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
+
+@code {
+    private List<Product> _products = new();
+
+    protected override void OnInitialized()
+    {
+        _products = MockProductData.GetSeedProducts();
+    }
+
+    private void HandleAddToCart(Product product)
+    {
+        Cart.AddProduct(product);
+    }
+}
