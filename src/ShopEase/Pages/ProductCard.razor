@@ -1,0 +1,12 @@
+@* Lives in Pages/ rather than a components folder because the capstone brief
+   names this exact location — see Pages/README.md for why this is kept as-is. *@
+
+<div class="product-card">
+    <p>@Product.GetDetails()</p>
+    <button class="btn btn-primary">Add to Cart</button>
+</div>
+
+@code {
+    [Parameter]
+    public Product Product { get; set; } = default!;
+}
