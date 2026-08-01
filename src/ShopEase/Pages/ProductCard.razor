@@ -3,10 +3,20 @@
 
 <div class="product-card">
     <p>@Product.GetDetails()</p>
-    <button class="btn btn-primary">Add to Cart</button>
+    <button class="btn btn-primary" @onclick="HandleAddToCartClick">Add to Cart</button>
 </div>
 
 @code {
     [Parameter]
     public Product Product { get; set; } = default!;
+
+    // Raised when the button above is clicked; the parent page supplies the
+    // handler, so ProductCard itself never touches Cart directly.
+    [Parameter]
+    public EventCallback<Product> OnAddToCart { get; set; }
+
+    private async Task HandleAddToCartClick()
+    {
+        await OnAddToCart.InvokeAsync(Product);
+    }
 }
