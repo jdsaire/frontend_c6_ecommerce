@@ -14,5 +14,5 @@ underneath it.
   Entity Framework integration exists anywhere in this project. The same
   statement lives in the XML doc comment on the class itself.
 
-See [`../../learning-mode/01-Business-Logic-Foundations.md`](../../learning-mode/01-Business-Logic-Foundations.md)
+See [`../../../learning-mode/01-Business-Logic-Foundations.md`](../../../learning-mode/01-Business-Logic-Foundations.md)
 for the full walkthrough, including why the database had to be simulated.

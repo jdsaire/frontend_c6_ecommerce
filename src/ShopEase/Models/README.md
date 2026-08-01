@@ -10,6 +10,6 @@ in this project.
   made-up products, used by both `CartTest.razor` and `Products.razor`. There
   is no real product catalog or outside data source behind it.
 
-See [`../../learning-mode/01-Business-Logic-Foundations.md`](../../learning-mode/01-Business-Logic-Foundations.md)
+See [`../../../learning-mode/01-Business-Logic-Foundations.md`](../../../learning-mode/01-Business-Logic-Foundations.md)
 for the full plain-language walkthrough of how `Product` fits into the rest of
 the app.
