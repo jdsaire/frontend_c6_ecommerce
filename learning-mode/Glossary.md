@@ -3,8 +3,9 @@
 Not meant to be read start to finish — dip into it whenever a word in the
 walkthroughs or the `/src` folder READMEs doesn't ring a bell. Each entry says what
 the term means here, and where to see it in the project. Grows alongside the
-walkthrough files — this first pass covers everything introduced in
-[`01-Business-Logic-Foundations.md`](01-Business-Logic-Foundations.md).
+walkthrough files — it currently covers everything introduced in
+[`01-Business-Logic-Foundations.md`](01-Business-Logic-Foundations.md) and
+[`02-Building-the-Product-Card.md`](02-Building-the-Product-Card.md).
 
 ## Blazor WebAssembly
 
@@ -20,6 +21,20 @@ A blueprint describing what a thing has (its properties) and what it can do (its
 methods), without being any particular instance of that thing yet. `Product` and
 `Cart` are this project's two business-logic classes. Covered in [01, "Classes, Properties, and Methods."](01-Business-Logic-Foundations.md#classes-properties-and-methods-before-any-of-the-code)
 
+## Component
+
+A self-contained, reusable chunk of a Blazor app that bundles its own markup (what
+shows up) and its own C# (what it does) into one `.razor` file.
+[`ProductCard.razor`](../src/ShopEase/Pages/ProductCard.razor) is this project's
+example — written once, reused for every product in the catalog. Covered in [02, "What a Blazor Component Actually Is."](02-Building-the-Product-Card.md#what-a-blazor-component-actually-is)
+
+## Component parameter
+
+A property a component receives from whatever is using it, marked with
+`[Parameter]` in its C#. `ProductCard`'s `Product` parameter is what lets one
+component definition display a different product every time it's used. Covered in
+[02, "Component Parameters."](02-Building-the-Product-Card.md#component-parameters-how-productcard-receives-a-product)
+
 ## Constructor
 
 The method a class uses to set itself up when a new object is created from it.
@@ -33,6 +48,19 @@ The mechanism that lets a page or class ask for a shared service ("I need one of
 these") without constructing it itself, and get back the one instance everyone else
 is also sharing. `Cart` and `ShopDatabase` are both registered this way in
 [`Program.cs`](../src/ShopEase/Program.cs). Covered in [01, "Sharing One Cart Across Pages."](01-Business-Logic-Foundations.md#sharing-one-cart-across-pages-dependency-injection)
+
+## Event callback
+
+A component's way of reporting "this happened" back out to whatever is using it,
+typed as `EventCallback<T>`. `ProductCard`'s `OnAddToCart` is one — it hands the
+clicked product back to `Products.razor` without `ProductCard` ever touching `Cart`
+itself. Covered in [02, "Event-Driven Development."](02-Building-the-Product-Card.md#event-driven-development-getting-the-click-back-out)
+
+## Event-driven development
+
+A programming approach where a user action — a button click, here — triggers code
+to run in response, rather than the program deciding on its own when to act.
+`ProductCard`'s "Add to Cart" button is this project's example. Covered in [02, "Event-Driven Development."](02-Building-the-Product-Card.md#event-driven-development-getting-the-click-back-out)
 
 ## `List<T>`
 
