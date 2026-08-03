@@ -1,0 +1,98 @@
+@page "/security-test"
+
+<PageTitle>Security Test | ShopEase</PageTitle>
+
+<section class="security-test-page" aria-label="Security test cases">
+    <h1>Security Test Cases</h1>
+    <p class="security-test-page__intro">
+        This page runs <code>InputValidationService</code> directly against a small set of
+        benign, well-known probe strings and reports pass/fail per case — the same service
+        every text input in this app (search, login, checkout) is validated through. See
+        <code>docs/security-testing.md</code> for what each case demonstrates and,
+        plainly, what a PASS here does and does not prove.
+    </p>
+
+    <table class="security-test-table">
+        <thead>
+            <tr>
+                <th scope="col">Case</th>
+                <th scope="col">Input</th>
+                <th scope="col">Expected</th>
+                <th scope="col">Result</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var testCase in _cases)
+            {
+                <tr>
+                    <td>@testCase.Name</td>
+                    <td><code>@testCase.Input</code></td>
+                    <td>@testCase.ExpectedDescription</td>
+                    <td class="@(testCase.Passed ? "security-test-table__pass" : "security-test-table__fail")">
+                        @(testCase.Passed ? "✓ PASS" : "✗ FAIL")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <section class="security-test-encoding-demo" aria-label="Encoding demonstration">
+        <h2>Razor Encoding Demonstration</h2>
+        <p>
+            The probe string below is rendered through normal Razor interpolation, never
+            <code>MarkupString</code>. If you see the literal text below rather than an
+            executed script or alert, Blazor's default HTML encoding is working as expected.
+        </p>
+        <p class="security-test-encoding-demo__output">@ScriptProbe</p>
+    </section>
+</section>
+
+@code {
+    private const string ScriptProbe = "<script>alert('test')</script>";
+
+    private record TestCase(string Name, string Input, string ExpectedDescription, bool Passed);
+
+    private List<TestCase> _cases = new();
+
+    protected override void OnInitialized()
+    {
+        _cases = new List<TestCase>
+        {
+            BuildCase(
+                "Script tag (XSS)",
+                ScriptProbe,
+                "Rejected by the allow-list character policy",
+                expectAcceptance: false),
+            BuildCase(
+                "Quote-and-OR tautology (SQL injection)",
+                "' OR '1'='1",
+                "Rejected by the allow-list character policy",
+                expectAcceptance: false),
+            BuildCase(
+                "Statement terminator + comment (\"Bobby Tables\", SQL injection)",
+                "Robert'); DROP TABLE Products;--",
+                "Rejected by the allow-list character policy",
+                expectAcceptance: false),
+            BuildCase(
+                "Legitimate hyphenated catalog name",
+                "27-Inch Monitor",
+                "Accepted — the allow-list must not reject real product names",
+                expectAcceptance: true),
+            BuildCase(
+                "Over-length input",
+                new string('A', 500),
+                "Rejected by the length bound",
+                expectAcceptance: false),
+        };
+    }
+
+    private static TestCase BuildCase(string name, string input, string expectedDescription, bool expectAcceptance)
+    {
+        var isAccepted = InputValidationService.IsWithinLength(input)
+            && !InputValidationService.ContainsInjectionPattern(input)
+            && System.Text.RegularExpressions.Regex.IsMatch(input, InputValidationService.SafeTextPattern);
+
+        var passed = isAccepted == expectAcceptance;
+        return new TestCase(name, input, expectedDescription, passed);
+    }
+}

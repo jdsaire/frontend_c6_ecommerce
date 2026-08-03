@@ -61,6 +61,25 @@ public static class InputValidationService
     }
 
     /// <summary>
+    /// Default maximum length for the short free-text fields this app accepts (search,
+    /// name, city, and similar). Individual fields may apply a different bound via their
+    /// own <c>[StringLength]</c> attribute where one genuinely differs (addresses,
+    /// emails); this is the shared default and what <c>Pages/SecurityTest.razor</c>
+    /// exercises directly for its length-bound case.
+    /// </summary>
+    public const int DefaultMaxLength = 60;
+
+    /// <summary>
+    /// Whether <paramref name="input"/> is at or under <paramref name="maxLength"/>
+    /// (defaulting to <see cref="DefaultMaxLength"/>). A null or empty input always
+    /// passes -- presence is enforced separately by <c>[Required]</c> where needed.
+    /// </summary>
+    public static bool IsWithinLength(string? input, int maxLength = DefaultMaxLength)
+    {
+        return (input?.Length ?? 0) <= maxLength;
+    }
+
+    /// <summary>
     /// Trims leading/trailing whitespace and collapses internal runs of whitespace to a
     /// single space. Does not remove or alter any other character — rejection of
     /// disallowed characters happens via <see cref="SafeTextAttribute"/> so the user sees

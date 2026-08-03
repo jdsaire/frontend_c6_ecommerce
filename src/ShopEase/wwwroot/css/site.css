@@ -470,6 +470,55 @@
 }
 
 /* ================================================================
+   Security test page (/security-test) — a plain evidence table in
+   the same spirit as /cart-test, not a graded UI/UX surface. PASS
+   uses --shopease-accent and FAIL uses --shopease-danger (both
+   already-verified ratios); the text itself ("PASS"/"FAIL" plus a
+   glyph) also carries the result, so color is never the only signal.
+   ================================================================ */
+
+.security-test-page {
+    max-width: 48rem;
+}
+
+.security-test-page__intro {
+    color: var(--shopease-muted);
+}
+
+.security-test-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0 2rem;
+}
+
+.security-test-table th,
+.security-test-table td {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--shopease-border);
+    font-size: 0.9rem;
+}
+
+.security-test-table__pass {
+    color: var(--shopease-accent);
+    font-weight: 600;
+}
+
+.security-test-table__fail {
+    color: var(--shopease-danger);
+    font-weight: 600;
+}
+
+.security-test-encoding-demo__output {
+    background: #f7f9fb;
+    border: 1px solid var(--shopease-border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-family: monospace;
+    word-break: break-all;
+}
+
+/* ================================================================
    Responsive breakpoints — mobile (base, above), tablet, desktop.
    641px matches the sidebar/nav cutover already used by
    Layout/MainLayout.razor.css and Layout/NavMenu.razor.css.
