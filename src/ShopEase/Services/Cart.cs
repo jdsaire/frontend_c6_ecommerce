@@ -59,6 +59,15 @@ public class Cart
     // changing its shape, so AddProduct, RemoveProduct, DisplayCartItems,
     // and CalculateTotal above keep working exactly as before.
 
+    // Raised so independent components — like the header's persistent cart
+    // summary — can refresh without polling. The four frozen methods above
+    // are untouched and never raise this themselves; callers (pages, or
+    // this class's own quantity helpers below) call NotifyChange() after a
+    // mutation instead.
+    public event Action? OnChange;
+
+    public void NotifyChange() => OnChange?.Invoke();
+
     // How many units of this product are currently in the cart.
     public int GetQuantity(int productId)
     {
@@ -86,6 +95,7 @@ public class Cart
         }
 
         AddProduct(product);
+        NotifyChange();
         return true;
     }
 
@@ -113,6 +123,7 @@ public class Cart
             _shopDatabase.InsertProduct(remaining);
         }
 
+        NotifyChange();
         return true;
     }
 }

@@ -95,6 +95,7 @@
     private void HandleAddToCart(Product product)
     {
         Cart.AddProduct(product);
+        Cart.NotifyChange();
     }
 
     private void HandleIncrement(Product product)
@@ -110,5 +111,6 @@
     private void HandleRemove(Product product)
     {
         Cart.RemoveProduct(product.ProductID);
+        Cart.NotifyChange();
     }
 }
