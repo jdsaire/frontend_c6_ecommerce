@@ -97,6 +97,7 @@
         @if (!Cart.Items.Any())
         {
             <p><em>Cart is empty.</em></p>
+            <p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
         }
         else
         {
@@ -106,8 +107,20 @@
                     <li>@line.Product.Name &times; @line.Quantity — $@line.LineTotal.ToString("F2")</li>
                 }
             </ul>
+            <p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
+            <AuthorizeView Context="checkoutAuthState">
+                <Authorized>
+                    <a class="btn btn-primary storefront-cart-summary__checkout" href="/checkout">
+                        Proceed to Checkout
+                    </a>
+                </Authorized>
+                <NotAuthorized>
+                    <p class="storefront-cart-summary__signin-note">
+                        <a href="/login">Sign in</a> to proceed to checkout.
+                    </p>
+                </NotAuthorized>
+            </AuthorizeView>
         }
-        <p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
     </section>
 </section>
 
