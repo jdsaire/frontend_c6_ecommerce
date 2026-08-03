@@ -1,0 +1,128 @@
+@page "/checkout"
+@inject Cart Cart
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>Checkout | ShopEase</PageTitle>
+
+<section class="checkout-page" aria-label="Checkout">
+    <h1>Checkout</h1>
+
+    <AuthorizeView Context="checkoutAuthState">
+        <Authorized>
+            @if (_orderConfirmed)
+            {
+                <p class="checkout-confirmation" role="status" aria-live="polite">
+                    Order confirmed. Reference: <strong>@_confirmationReference</strong>. This is a
+                    demo submission for a teaching project — no payment was collected or processed,
+                    and this reference is not a real order-management identifier.
+                </p>
+                <a class="btn btn-primary" href="/products">Continue Shopping</a>
+            }
+            else if (!Cart.Items.Any())
+            {
+                <p class="checkout-page__empty">
+                    Your cart is empty. <a href="/products">Continue shopping</a> to add items before
+                    checking out.
+                </p>
+            }
+            else
+            {
+                <p class="checkout-page__intro">
+                    This is a demo submission for a teaching project — no payment is collected or
+                    processed, and nothing you enter here is stored anywhere beyond this page.
+                </p>
+
+                <EditForm Model="_model" OnValidSubmit="HandleSubmit" class="checkout-form">
+                    <DataAnnotationsValidator />
+
+                    <div class="checkout-form__field">
+                        <label for="checkout-name">Full Name</label>
+                        <InputText id="checkout-name" class="checkout-form__input" autocomplete="name"
+                                   @bind-Value="_model.FullName" />
+                        <ValidationMessage For="@(() => _model.FullName)" class="checkout-form__error" aria-live="polite" />
+                    </div>
+
+                    <div class="checkout-form__field">
+                        <label for="checkout-address">Shipping Address</label>
+                        <InputText id="checkout-address" class="checkout-form__input" autocomplete="street-address"
+                                   @bind-Value="_model.Address" />
+                        <ValidationMessage For="@(() => _model.Address)" class="checkout-form__error" aria-live="polite" />
+                    </div>
+
+                    <div class="checkout-form__field">
+                        <label for="checkout-city">City</label>
+                        <InputText id="checkout-city" class="checkout-form__input" autocomplete="address-level2"
+                                   @bind-Value="_model.City" />
+                        <ValidationMessage For="@(() => _model.City)" class="checkout-form__error" aria-live="polite" />
+                    </div>
+
+                    <div class="checkout-form__field">
+                        <label for="checkout-postal">Postal / ZIP Code</label>
+                        <InputText id="checkout-postal" class="checkout-form__input" autocomplete="postal-code"
+                                   @bind-Value="_model.PostalCode" />
+                        <ValidationMessage For="@(() => _model.PostalCode)" class="checkout-form__error" aria-live="polite" />
+                    </div>
+
+                    <div class="checkout-form__field">
+                        <label for="checkout-email">Email</label>
+                        <InputText id="checkout-email" type="email" class="checkout-form__input" autocomplete="email"
+                                   @bind-Value="_model.Email" />
+                        <ValidationMessage For="@(() => _model.Email)" class="checkout-form__error" aria-live="polite" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Place Order</button>
+                </EditForm>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <p class="checkout-page__signin-note">
+                <a href="/login">Sign in</a> to proceed to checkout.
+            </p>
+        </NotAuthorized>
+    </AuthorizeView>
+</section>
+
+@code {
+    // Deliberately minimal and deliberately non-financial: no card number, no CVV, no
+    // expiry, no separate billing address. See docs/security-decisions.md for why.
+    private class CheckoutModel
+    {
+        [Required(ErrorMessage = "Full name is required.")]
+        [StringLength(80, MinimumLength = 2, ErrorMessage = "Full name must be 2-80 characters.")]
+        [SafeText]
+        public string FullName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Shipping address is required.")]
+        [StringLength(120, MinimumLength = 5, ErrorMessage = "Address must be 5-120 characters.")]
+        [SafeText]
+        public string Address { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "City is required.")]
+        [StringLength(60, MinimumLength = 2, ErrorMessage = "City must be 2-60 characters.")]
+        [SafeText]
+        public string City { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Postal/ZIP code is required.")]
+        [StringLength(12, MinimumLength = 3, ErrorMessage = "Postal/ZIP code must be 3-12 characters.")]
+        [SafeText]
+        public string PostalCode { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Enter a valid email address.")]
+        [StringLength(254, ErrorMessage = "Email is too long.")]
+        public string Email { get; set; } = string.Empty;
+    }
+
+    private readonly CheckoutModel _model = new();
+    private bool _orderConfirmed;
+    private string _confirmationReference = string.Empty;
+
+    // In-memory only, exactly as ephemeral as the rest of this run's state -- nothing
+    // here is written to storage. Activity 5 owns persistence.
+    private void HandleSubmit()
+    {
+        _confirmationReference = $"DEMO-{DateTime.UtcNow:yyyyMMddHHmmss}";
+        _orderConfirmed = true;
+        Cart.ClearCart();
+    }
+}

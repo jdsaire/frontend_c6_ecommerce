@@ -5,8 +5,31 @@ walkthroughs or the `/src` folder READMEs doesn't ring a bell. Each entry says w
 the term means here, and where to see it in the project. Grows alongside the
 walkthrough files — it currently covers everything introduced in
 [`01-Business-Logic-Foundations.md`](01-Business-Logic-Foundations.md),
-[`02-Building-the-Product-Card.md`](02-Building-the-Product-Card.md), and
-[`03-Responsive-UI-and-Accessibility.md`](03-Responsive-UI-and-Accessibility.md).
+[`02-Building-the-Product-Card.md`](02-Building-the-Product-Card.md),
+[`03-Responsive-UI-and-Accessibility.md`](03-Responsive-UI-and-Accessibility.md), and
+[`04-Input-Validation-and-Authentication.md`](04-Input-Validation-and-Authentication.md).
+
+## ARIA live region
+
+A part of the page marked so assistive technology (like a screen reader)
+announces changes to it automatically, without the visitor needing to move
+focus there. This project uses `aria-live="polite"` on the storefront's "Show
+more" count, and now also on every form's validation messages and the
+checkout confirmation. Covered in [04, "The Search Box and Login Form."](04-Input-Validation-and-Authentication.md#the-search-box-and-login-form-editform-and-dataannotations)
+
+## Authentication
+
+Verifying who someone is before letting them do something the app restricts —
+here, adding a product to the cart. This project simulates authentication
+rather than using a real account system, since it's a static site with no
+server to check a real password against. Covered in [04, "Authentication Without a Server."](04-Input-Validation-and-Authentication.md#authentication-without-a-server)
+
+## AuthorizeView
+
+A Blazor component that renders one thing when the current visitor is signed
+in and another when they aren't, via its `<Authorized>` and `<NotAuthorized>`
+sections. This project uses it on the login page, the header, every product
+card, and the checkout entry point. Covered in [04, "Authentication Without a Server."](04-Input-Validation-and-Authentication.md#authentication-without-a-server)
 
 ## Blazor WebAssembly
 
@@ -51,12 +74,39 @@ The method a class uses to set itself up when a new object is created from it.
 reference to the shared simulated database without building one itself. Covered in
 [01, "Sharing One Cart Across Pages."](01-Business-Logic-Foundations.md#sharing-one-cart-across-pages-dependency-injection)
 
+## Cross-site scripting (XSS)
+
+An attack where malicious script gets echoed back into a page and runs in
+another visitor's browser — classically, typing `<script>...</script>` into a
+field that isn't encoded before being displayed. Blazor HTML-encodes `@`
+interpolated values by default, so this project was never vulnerable to it,
+and has zero uses of the one thing (`MarkupString`) that would turn that
+protection off. Covered in [04, "Cross-Site Scripting and Blazor's Default Encoding."](04-Input-Validation-and-Authentication.md#cross-site-scripting-and-blazors-default-encoding)
+
+## Data sanitization
+
+Cleaning up input that's basically fine but needs tidying — trimming stray
+whitespace, for instance — as opposed to validation, which checks whether
+input should be accepted at all.
+[`InputValidationService.Sanitize`](../src/ShopEase/Services/InputValidationService.cs)
+does only this, deliberately never rewriting or stripping characters, so
+rejection always happens visibly through a validation message instead.
+Covered in [04, "What Input Validation and Sanitization Mean."](04-Input-Validation-and-Authentication.md#what-input-validation-and-sanitization-mean)
+
 ## Dependency injection (DI)
 
 The mechanism that lets a page or class ask for a shared service ("I need one of
 these") without constructing it itself, and get back the one instance everyone else
 is also sharing. `Cart` and `ShopDatabase` are both registered this way in
 [`Program.cs`](../src/ShopEase/Program.cs). Covered in [01, "Sharing One Cart Across Pages."](01-Business-Logic-Foundations.md#sharing-one-cart-across-pages-dependency-injection)
+
+## EditForm
+
+Blazor's built-in component for building a validated form: it tracks an
+`EditContext` for a model object, and pairs with `DataAnnotationsValidator`
+and `ValidationMessage` to show inline errors next to the field they belong
+to. This project's search box, login form, and checkout form are all built
+this way. Covered in [04, "The Search Box and Login Form."](04-Input-Validation-and-Authentication.md#the-search-box-and-login-form-editform-and-dataannotations)
 
 ## Event callback
 
@@ -78,6 +128,15 @@ the page currently has keyboard focus. This project extends its existing
 focus-ring style to a few controls (the quantity stepper, the remove control,
 the toolbar dropdowns) that weren't covered by it before, rather than
 suppressing or replacing it. Covered in [03, "Accessibility: Contrast, Keyboard Use, and Focus."](03-Responsive-UI-and-Accessibility.md#accessibility-contrast-keyboard-use-and-focus)
+
+## Input validation
+
+Checking that user input follows expected rules — length, allowed
+characters — before it's used for anything, as opposed to sanitization, which
+cleans up input that's already acceptable.
+[`InputValidationService`](../src/ShopEase/Services/InputValidationService.cs)
+is this project's shared validation logic, applied to every text field the
+app accepts. Covered in [04, "What Input Validation and Sanitization Mean."](04-Input-Validation-and-Authentication.md#what-input-validation-and-sanitization-mean)
 
 ## Keyboard operability
 
@@ -170,6 +229,15 @@ A dependency-injection lifetime meaning exactly one instance is created and shar
 by the whole app for as long as the browser tab stays open. `Cart` and
 `ShopDatabase` are both registered as singletons, which is what lets cart state
 stay consistent across different pages. Covered in [01, "Sharing One Cart Across Pages."](01-Business-Logic-Foundations.md#sharing-one-cart-across-pages-dependency-injection)
+
+## SQL injection
+
+An attack where untrusted input is able to change the meaning of a SQL query
+— for example typing `' OR '1'='1` into a login field so the query matches
+every row instead of one. This project's simulated database never builds a
+query string in the first place, so there's no query for this attack to
+change; the real defense in an app that does use SQL is a parameterized
+query on the server, not input filtering on the client. Covered in [04, "SQL Injection With No SQL."](04-Input-Validation-and-Authentication.md#sql-injection-with-no-sql)
 
 ## Visual hierarchy
 

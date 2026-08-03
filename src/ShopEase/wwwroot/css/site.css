@@ -13,6 +13,11 @@
     --shopease-muted: #5b6472;
     --shopease-border: #7f8794;
     --shopease-surface: #ffffff;
+    /* Not a new color: the remove control already used this hex inline, and the v3
+       report already measured it at ~6.54:1 on white. Naming it here so the login and
+       checkout forms' error text/borders reuse the same value through one token
+       instead of a second hardcoded red. */
+    --shopease-danger: #b3261e;
 }
 
 /* ---- Landing page ---- */
@@ -260,8 +265,257 @@
 
 .product-card__step:focus,
 .product-card__remove:focus,
-.storefront-filter select:focus {
+.storefront-filter select:focus,
+.storefront-search__input:focus,
+.product-card__signin-prompt:focus,
+.storefront-cart-summary__checkout:focus,
+.auth-form__input:focus,
+.auth-status__signin:focus,
+.auth-status__signout:focus,
+.checkout-form__input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* ================================================================
+   Validation messages -- overrides app.css's .validation-message,
+   which is plain "red" (~4.0:1 on white, under the 4.5:1 body-text
+   minimum). --shopease-danger is the same hex already used for the
+   product card's remove control and already measured at ~6.54:1 in
+   the v3 report, reused here rather than adding a second red.
+   ================================================================ */
+
+.validation-message {
+    color: var(--shopease-danger);
+}
+
+/* ================================================================
+   Product search (storefront toolbar) — shares .storefront-filter's
+   flex layout; only the input/error styling below is specific to it.
+   ================================================================ */
+
+.storefront-search {
+    flex: 1;
+    min-width: 0;
+}
+
+.storefront-search__input {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--shopease-border);
+    border-radius: 6px;
+    padding: 0.35rem 0.6rem;
+    background: var(--shopease-surface);
+    font-size: 0.95rem;
+    color: var(--shopease-ink);
+}
+
+.storefront-search__error {
+    display: block;
+    font-size: 0.8rem;
+    margin: 0.25rem 0 0;
+}
+
+/* ================================================================
+   Header sign-in status — sits beside CartSummary in MainLayout's
+   top-row (background #f7f7f7; --shopease-ink measures ~15.4:1 there,
+   --shopease-muted ~5.6:1 — both comfortably clear 4.5:1).
+   ================================================================ */
+
+.auth-status {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+}
+
+.auth-status__name {
+    color: var(--shopease-ink);
+}
+
+.auth-status__signout {
+    border: 1px solid var(--shopease-border);
+    border-radius: 6px;
+    background: var(--shopease-surface);
+    padding: 0.3rem 0.7rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: var(--shopease-ink);
+}
+
+.auth-status__signin {
+    font-weight: 600;
+}
+
+/* ================================================================
+   Shared form-field styling for the login and checkout screens —
+   both use the same visual language deliberately, so they read as
+   siblings rather than two different eras of the app. Reuses the
+   same tokens, borders, and radii as the storefront's existing
+   filter/select controls instead of a second, competing style.
+   ================================================================ */
+
+.auth-page,
+.checkout-page {
+    max-width: 32rem;
+    margin: 0 auto;
+    padding: 1rem 0 2.5rem;
+}
+
+.auth-page__intro,
+.checkout-page__intro,
+.checkout-page__empty,
+.checkout-page__signin-note,
+.storefront-cart-summary__signin-note,
+.product-card__signin-note {
+    color: var(--shopease-muted);
+}
+
+.auth-form,
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.auth-form__field,
+.checkout-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.auth-form__field label,
+.checkout-form__field label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--shopease-ink);
+}
+
+.auth-form__input,
+.checkout-form__input {
+    border: 1px solid var(--shopease-border);
+    border-radius: 6px;
+    padding: 0.55rem 0.7rem;
+    background: var(--shopease-surface);
+    font-size: 1rem;
+    color: var(--shopease-ink);
+}
+
+.auth-form__input.invalid,
+.checkout-form__input.invalid {
+    border-color: var(--shopease-danger);
+}
+
+.auth-form__error,
+.checkout-form__error {
+    display: block;
+    font-size: 0.85rem;
+}
+
+.auth-demo-accounts {
+    margin-top: 1.75rem;
+    padding: 1rem 1.1rem;
+    background: #f7f9fb;
+    border: 1px solid var(--shopease-border);
+    border-radius: 10px;
+}
+
+.auth-demo-accounts h2 {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+}
+
+.auth-demo-accounts p {
+    color: var(--shopease-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.auth-demo-accounts ul {
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+/* ================================================================
+   Checkout-specific states: gated entry, empty cart, and the
+   post-submission confirmation. --shopease-accent on white measures
+   ~5.2:1, well clear of the 4.5:1 body-text minimum.
+   ================================================================ */
+
+.checkout-confirmation {
+    background: #eef4fb;
+    border: 1px solid var(--shopease-accent);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    color: var(--shopease-ink);
+    margin-bottom: 1rem;
+}
+
+/* ================================================================
+   Sign-in gating on the storefront's own controls — the product
+   card's gated add-to-cart prompt and the cart summary's gated
+   checkout entry point.
+   ================================================================ */
+
+.product-card__signin-prompt {
+    margin-top: 0.25rem;
+    font-weight: 600;
+    color: var(--shopease-accent);
+}
+
+.storefront-cart-summary__checkout {
+    margin-top: 0.75rem;
+    display: inline-block;
+}
+
+/* ================================================================
+   Security test page (/security-test) — a plain evidence table in
+   the same spirit as /cart-test, not a graded UI/UX surface. PASS
+   uses --shopease-accent and FAIL uses --shopease-danger (both
+   already-verified ratios); the text itself ("PASS"/"FAIL" plus a
+   glyph) also carries the result, so color is never the only signal.
+   ================================================================ */
+
+.security-test-page {
+    max-width: 48rem;
+}
+
+.security-test-page__intro {
+    color: var(--shopease-muted);
+}
+
+.security-test-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0 2rem;
+}
+
+.security-test-table th,
+.security-test-table td {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--shopease-border);
+    font-size: 0.9rem;
+}
+
+.security-test-table__pass {
+    color: var(--shopease-accent);
+    font-weight: 600;
+}
+
+.security-test-table__fail {
+    color: var(--shopease-danger);
+    font-weight: 600;
+}
+
+.security-test-encoding-demo__output {
+    background: #f7f9fb;
+    border: 1px solid var(--shopease-border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-family: monospace;
+    word-break: break-all;
 }
 
 /* ================================================================
@@ -288,6 +542,15 @@
     .cart-summary {
         gap: 0.5rem;
         padding: 0.4rem 0.9rem;
+    }
+
+    .storefront-search {
+        flex: 0 1 16rem;
+    }
+
+    .auth-page,
+    .checkout-page {
+        padding-top: 2.5rem;
     }
 }
 

@@ -12,27 +12,43 @@
 
         @if (Quantity <= 0)
         {
-            <button class="btn btn-primary product-card__add" @onclick="HandleAddToCartClick">
-                Add to Cart
-            </button>
+            @if (CanModifyCart)
+            {
+                <button class="btn btn-primary product-card__add" @onclick="HandleAddToCartClick">
+                    Add to Cart
+                </button>
+            }
+            else
+            {
+                <a class="product-card__signin-prompt" href="/login">Sign in to add to cart</a>
+            }
         }
         else
         {
-            <div class="product-card__quantity" role="group" aria-label="@($"Quantity for {Product.Name}")">
-                <button class="product-card__step" type="button" disabled="@(Quantity <= Cart.MinQuantity)"
-                        @onclick="HandleDecrementClick" aria-label="@($"Decrease quantity of {Product.Name}")">
-                    −
-                </button>
-                <span class="product-card__qty-value">@Quantity</span>
-                <button class="product-card__step" type="button" disabled="@(Quantity >= Cart.MaxQuantity)"
-                        @onclick="HandleIncrementClick" aria-label="@($"Increase quantity of {Product.Name}")">
-                    +
-                </button>
-                <button class="product-card__remove" type="button" @onclick="HandleRemoveClick"
-                        aria-label="@($"Remove {Product.Name} from cart")">
-                    🗑
-                </button>
-            </div>
+            @if (CanModifyCart)
+            {
+                <div class="product-card__quantity" role="group" aria-label="@($"Quantity for {Product.Name}")">
+                    <button class="product-card__step" type="button" disabled="@(Quantity <= Cart.MinQuantity)"
+                            @onclick="HandleDecrementClick" aria-label="@($"Decrease quantity of {Product.Name}")">
+                        −
+                    </button>
+                    <span class="product-card__qty-value">@Quantity</span>
+                    <button class="product-card__step" type="button" disabled="@(Quantity >= Cart.MaxQuantity)"
+                            @onclick="HandleIncrementClick" aria-label="@($"Increase quantity of {Product.Name}")">
+                        +
+                    </button>
+                    <button class="product-card__remove" type="button" @onclick="HandleRemoveClick"
+                            aria-label="@($"Remove {Product.Name} from cart")">
+                        🗑
+                    </button>
+                </div>
+            }
+            else
+            {
+                <p class="product-card__signin-note">
+                    @Quantity in your cart — <a href="/login">sign in</a> to modify.
+                </p>
+            }
         }
     </div>
 </div>
@@ -50,6 +66,14 @@
     // the "Add to Cart" button; anything higher shows the stepper instead.
     [Parameter]
     public int Quantity { get; set; }
+
+    // Additive: whether the current visitor may mutate the cart from this card. The
+    // calling page computes this from auth state (AuthorizeView) and passes a plain
+    // bool down -- this component has no auth-awareness of its own, so the sign-in
+    // gate stays entirely in the calling layer. Defaults to true so existing callers
+    // keep today's behavior.
+    [Parameter]
+    public bool CanModifyCart { get; set; } = true;
 
     [Parameter]
     public EventCallback<Product> OnIncrement { get; set; }

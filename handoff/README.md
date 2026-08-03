@@ -18,6 +18,11 @@ repository.
   an accessibility audit. Its completion report also covers `v2.2` in full,
   since both were built from one two-part plan with a human merge gate in
   between.
+- [`v4/`](v4/README.md) — Activity 4: input validation and sanitization,
+  simulated authentication on Blazor's real `AuthenticationStateProvider`/
+  `AuthorizeView` abstraction, cart gating on sign-in, and a security test
+  pass, combined with a patch adding a checkout screen and retroactive
+  Activity-3-equivalent styling/accessibility coverage for both new screens.
 
 Each run's plan and completion report live together in its own `v{N}/`
 subfolder, so the reasoning behind a given set of commits stays attached to

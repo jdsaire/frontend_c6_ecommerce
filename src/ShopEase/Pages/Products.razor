@@ -1,5 +1,6 @@
 @page "/products"
 @inject Cart Cart
+@using System.ComponentModel.DataAnnotations
 
 <PageTitle>Shop | ShopEase</PageTitle>
 
@@ -31,23 +32,57 @@
                 <option value="price-desc">Price: High to Low ↓</option>
             </select>
         </label>
+
+        <EditForm EditContext="_searchEditContext" class="storefront-filter storefront-search">
+            <DataAnnotationsValidator />
+            <svg class="storefront-filter__icon" viewBox="0 0 16 16" aria-hidden="true">
+                <circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.4" />
+                <path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+            </svg>
+            <label for="storefront-search-input" class="visually-hidden">Search products</label>
+            <InputText id="storefront-search-input"
+                       class="storefront-search__input"
+                       placeholder="Search products…"
+                       maxlength="60"
+                       @bind-Value="_searchModel.Term"
+                       @bind-Value:after="ApplyFilters" />
+            <ValidationMessage For="@(() => _searchModel.Term)" class="storefront-search__error" aria-live="polite" />
+        </EditForm>
     </div>
 
     <div class="storefront-grid">
         @foreach (var product in _displayedProducts.Take(_visibleCount))
         {
-            <ProductCard Product="product"
-                         Quantity="Cart.GetQuantity(product.ProductID)"
-                         OnAddToCart="HandleAddToCart"
-                         OnIncrement="HandleIncrement"
-                         OnDecrement="HandleDecrement"
-                         OnRemove="HandleRemove" />
+            <AuthorizeView Context="cartAuthState">
+                <Authorized>
+                    <ProductCard Product="product"
+                                 Quantity="Cart.GetQuantity(product.ProductID)"
+                                 CanModifyCart="true"
+                                 OnAddToCart="HandleAddToCart"
+                                 OnIncrement="HandleIncrement"
+                                 OnDecrement="HandleDecrement"
+                                 OnRemove="HandleRemove" />
+                </Authorized>
+                <NotAuthorized>
+                    <ProductCard Product="product"
+                                 Quantity="Cart.GetQuantity(product.ProductID)"
+                                 CanModifyCart="false"
+                                 OnAddToCart="HandleAddToCart"
+                                 OnIncrement="HandleIncrement"
+                                 OnDecrement="HandleDecrement"
+                                 OnRemove="HandleRemove" />
+                </NotAuthorized>
+            </AuthorizeView>
         }
     </div>
 
     <div class="storefront-show-more">
         <p class="storefront-show-more__count" aria-live="polite">
             Showing @Math.Min(_visibleCount, _displayedProducts.Count) of @_displayedProducts.Count products
+            @if (!string.IsNullOrWhiteSpace(_searchModel.Term))
+            {
+                <text> matching "@_searchModel.Term"</text>
+            }
         </p>
         @if (_visibleCount < _displayedProducts.Count)
         {
@@ -62,6 +97,7 @@
         @if (!Cart.Items.Any())
         {
             <p><em>Cart is empty.</em></p>
+            <p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
         }
         else
         {
@@ -71,13 +107,34 @@
                     <li>@line.Product.Name &times; @line.Quantity — $@line.LineTotal.ToString("F2")</li>
                 }
             </ul>
+            <p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
+            <AuthorizeView Context="checkoutAuthState">
+                <Authorized>
+                    <a class="btn btn-primary storefront-cart-summary__checkout" href="/checkout">
+                        Proceed to Checkout
+                    </a>
+                </Authorized>
+                <NotAuthorized>
+                    <p class="storefront-cart-summary__signin-note">
+                        <a href="/login">Sign in</a> to proceed to checkout.
+                    </p>
+                </NotAuthorized>
+            </AuthorizeView>
         }
-        <p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
     </section>
 </section>
 
 @code {
     private const int PageSize = 6;
+
+    // Deliberately minimal: DataAnnotations needs a bindable model even for a single
+    // field, and this is what the search box's EditForm binds and validates against.
+    private class SearchModel
+    {
+        [SafeText]
+        [StringLength(60, ErrorMessage = "Search text can be at most 60 characters.")]
+        public string Term { get; set; } = string.Empty;
+    }
 
     private List<Product> _products = new();
     private List<Product> _displayedProducts = new();
@@ -86,18 +143,32 @@
     private string _sortOrder = "none";
     private int _visibleCount = PageSize;
 
+    private readonly SearchModel _searchModel = new();
+    private EditContext _searchEditContext = default!;
+
     protected override void OnInitialized()
     {
         _products = MockProductData.GetSeedProducts();
         _categories = _products.Select(p => p.Category).Distinct().OrderBy(c => c).ToList();
+        _searchEditContext = new EditContext(_searchModel);
         ApplyFilters();
     }
 
     private void ApplyFilters()
     {
+        // Validate on every keystroke (@bind-Value:after) so the inline message tracks
+        // live typing instead of waiting for a submit this form never has.
+        var searchIsValid = _searchEditContext.Validate();
+        var searchTerm = searchIsValid ? InputValidationService.Sanitize(_searchModel.Term) : string.Empty;
+
         IEnumerable<Product> filtered = _selectedCategory == "All"
             ? _products
             : _products.Where(p => p.Category == _selectedCategory);
+
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            filtered = filtered.Where(p => p.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+        }
 
         _displayedProducts = _sortOrder switch
         {
