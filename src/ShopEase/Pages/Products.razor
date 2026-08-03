@@ -46,7 +46,7 @@
                        maxlength="60"
                        @bind-Value="_searchModel.Term"
                        @bind-Value:after="ApplyFilters" />
-            <ValidationMessage For="@(() => _searchModel.Term)" class="storefront-search__error" />
+            <ValidationMessage For="@(() => _searchModel.Term)" class="storefront-search__error" aria-live="polite" />
         </EditForm>
     </div>
 

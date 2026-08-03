@@ -39,35 +39,35 @@
                         <label for="checkout-name">Full Name</label>
                         <InputText id="checkout-name" class="checkout-form__input" autocomplete="name"
                                    @bind-Value="_model.FullName" />
-                        <ValidationMessage For="@(() => _model.FullName)" class="checkout-form__error" />
+                        <ValidationMessage For="@(() => _model.FullName)" class="checkout-form__error" aria-live="polite" />
                     </div>
 
                     <div class="checkout-form__field">
                         <label for="checkout-address">Shipping Address</label>
                         <InputText id="checkout-address" class="checkout-form__input" autocomplete="street-address"
                                    @bind-Value="_model.Address" />
-                        <ValidationMessage For="@(() => _model.Address)" class="checkout-form__error" />
+                        <ValidationMessage For="@(() => _model.Address)" class="checkout-form__error" aria-live="polite" />
                     </div>
 
                     <div class="checkout-form__field">
                         <label for="checkout-city">City</label>
                         <InputText id="checkout-city" class="checkout-form__input" autocomplete="address-level2"
                                    @bind-Value="_model.City" />
-                        <ValidationMessage For="@(() => _model.City)" class="checkout-form__error" />
+                        <ValidationMessage For="@(() => _model.City)" class="checkout-form__error" aria-live="polite" />
                     </div>
 
                     <div class="checkout-form__field">
                         <label for="checkout-postal">Postal / ZIP Code</label>
                         <InputText id="checkout-postal" class="checkout-form__input" autocomplete="postal-code"
                                    @bind-Value="_model.PostalCode" />
-                        <ValidationMessage For="@(() => _model.PostalCode)" class="checkout-form__error" />
+                        <ValidationMessage For="@(() => _model.PostalCode)" class="checkout-form__error" aria-live="polite" />
                     </div>
 
                     <div class="checkout-form__field">
                         <label for="checkout-email">Email</label>
                         <InputText id="checkout-email" type="email" class="checkout-form__input" autocomplete="email"
                                    @bind-Value="_model.Email" />
-                        <ValidationMessage For="@(() => _model.Email)" class="checkout-form__error" />
+                        <ValidationMessage For="@(() => _model.Email)" class="checkout-form__error" aria-live="polite" />
                     </div>
 
                     <button type="submit" class="btn btn-primary">Place Order</button>
