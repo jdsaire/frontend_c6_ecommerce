@@ -11,7 +11,7 @@
     --shopease-accent: #1b6ec2;
     --shopease-ink: #1c1f26;
     --shopease-muted: #5b6472;
-    --shopease-border: #e2e5ea;
+    --shopease-border: #7f8794;
     --shopease-surface: #ffffff;
 }
 
@@ -248,6 +248,20 @@
 
 .cart-summary__total {
     font-size: 0.95rem;
+}
+
+/* ================================================================
+   Accessibility — visible focus indicator for custom controls that
+   are not covered by app.css's .btn/.form-control focus rule
+   (stepper buttons, remove control, and the toolbar's plain
+   <select> elements). Reuses that same rule's colors rather than
+   inventing a second focus style.
+   ================================================================ */
+
+.product-card__step:focus,
+.product-card__remove:focus,
+.storefront-filter select:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 /* ================================================================
