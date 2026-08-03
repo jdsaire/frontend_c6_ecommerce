@@ -5,9 +5,11 @@ Developer Specialization capstone project. It started with Activity 1
 (business logic) and Activity 2 (Blazor components for product listings) of
 the capstone's five activities, had a storefront-bridge pass that gave it a
 real retail shell — expanded catalog, imagery, quantity controls, filtering,
-a persistent cart summary — and has now completed Activity 3: a full styling
-and responsive-design pass with mobile/tablet/desktop breakpoints and an
-accessibility audit. None of this changed Activity 1 or 2's graded code.
+a persistent cart summary — completed Activity 3: a full styling and
+responsive-design pass with mobile/tablet/desktop breakpoints and an
+accessibility audit, and has now completed Activity 4: input validation,
+simulated authentication, a gated checkout screen, and a security test
+pass. None of this changed Activity 1 or 2's graded code.
 
 ## See It Live
 
@@ -66,6 +68,19 @@ for GitHub Codespaces and VS Code instructions.
   AA contrast, keyboard operability, visible focus indicators). See
   [`docs/activity-3-decisions.md`](docs/activity-3-decisions.md) and
   [`handoff/v3/`](handoff/v3/README.md).
+- **Activity 4 — Secure Coding Practices**: an
+  [`InputValidationService`](src/ShopEase/Services/InputValidationService.cs)
+  applied to a new validated product search and a
+  [login form](src/ShopEase/Pages/Login.razor); simulated authentication
+  built on Blazor's real `AuthenticationStateProvider`/`AuthorizeView`
+  abstraction, gating cart mutation and a new
+  [checkout screen](src/ShopEase/Pages/Checkout.razor) on sign-in; and a
+  [`/security-test`](src/ShopEase/Pages/SecurityTest.razor) evidence page.
+  Every simulated element says so at its definition, and no file claims the
+  app is secure against, prevents, or protects against any attack class —
+  see [`docs/security-decisions.md`](docs/security-decisions.md),
+  [`docs/security-testing.md`](docs/security-testing.md), and
+  [`handoff/v4/`](handoff/v4/README.md).
 
 ## Documentation
 

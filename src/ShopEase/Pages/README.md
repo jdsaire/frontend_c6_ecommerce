@@ -26,15 +26,40 @@ Every routable page in the app, plus one component that technically isn't one.
   card (image, price, category, stock, a quantity stepper, a remove
   control) and added four new parameters (`Quantity`, `OnIncrement`,
   `OnDecrement`, `OnRemove`) alongside the original two, which are
-  untouched. See below for why it lives in this folder.
+  untouched; Activity 4 added one more additive parameter, `CanModifyCart`
+  (default `true`), so the calling page can gate the add/increment/
+  decrement/remove controls on sign-in without this component knowing
+  anything about authentication. See below for why it lives in this folder.
 - [`Products.razor`](Products.razor) — the storefront page at `/products`: a
   card grid, category filter, price sort, progressive "Show more" paging,
-  and an on-page cart summary, all wired to the shared `Cart`. Originally
-  Activity 2's product listing page; rebuilt in the storefront-bridge run
-  with the Activity 2 assignment narration removed, then given show-more
-  paging in the v2.2 run — see
+  an `EditForm`-based product search (Activity 4), and an on-page cart
+  summary, all wired to the shared `Cart`. Each `ProductCard` is wrapped in
+  `<AuthorizeView>` so signed-out visitors see a sign-in prompt instead of
+  the add-to-cart controls, and the cart summary's "Proceed to Checkout"
+  link is gated the same way. Originally Activity 2's product listing page;
+  rebuilt in the storefront-bridge run with the Activity 2 assignment
+  narration removed, then given show-more paging in the v2.2 run — see
   [`../../../docs/activity-3-decisions.md`](../../../docs/activity-3-decisions.md)
   for why paging beats pagination here.
+- [`Login.razor`](Login.razor) — Activity 4's sign-in page at `/login`. An
+  `EditForm`-validated username/password form against
+  [`DemoAccountStore`](../Services/README.md), with the demo credentials
+  shown openly on the page and a sign-out control when already signed in.
+  See [`../../../docs/security-decisions.md`](../../../docs/security-decisions.md)
+  for why this simulates ASP.NET Identity instead of using it.
+- [`Checkout.razor`](Checkout.razor) — the checkout screen at `/checkout`,
+  added by a patch to Activity 4's run. Five non-financial fields (Full
+  Name, Shipping Address, City, Postal/ZIP Code, Email) through the same
+  validation service as every other form; reachable only when signed in and
+  the cart is non-empty, both checked in the page itself so a direct visit
+  never shows a broken form. A valid submission shows an in-memory demo
+  confirmation and clears the cart.
+- [`SecurityTest.razor`](SecurityTest.razor) — the security test evidence
+  page at `/security-test`, following the `/cart-test` precedent. Runs
+  [`InputValidationService`](../Services/README.md) against five benign
+  canonical probe strings and reports pass/fail per case; also demonstrates
+  Razor's default HTML encoding against a script-tag probe. See
+  [`../../../docs/security-testing.md`](../../../docs/security-testing.md).
 
 ## Why ProductCard.razor Is Here, Not in a Components Folder
 
