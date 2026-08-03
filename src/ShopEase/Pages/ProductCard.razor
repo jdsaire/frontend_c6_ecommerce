@@ -7,7 +7,7 @@
     <div class="product-card__body">
         <p class="product-card__category">@Product.Category</p>
         <h3 class="product-card__name">@Product.Name</h3>
-        <p class="product-card__price">@Product.Price.ToString("C")</p>
+        <p class="product-card__price">$@Product.Price.ToString("F2")</p>
         <p class="product-card__stock">@Product.Stock in stock</p>
 
         @if (Quantity <= 0)

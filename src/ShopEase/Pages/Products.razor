@@ -1,49 +1,67 @@
 @page "/products"
 @inject Cart Cart
 
-<PageTitle>Products</PageTitle>
+<PageTitle>Shop | ShopEase</PageTitle>
 
-<h1>Activity 2: Product Listing</h1>
-
-<p>
-    One <code>ProductCard</code> per seed product. Clicking its "Add to Cart"
-    button calls <code>HandleAddToCart</code> below, which adds that product to
-    the shared <code>Cart</code> and updates the summary beneath the listing.
-</p>
-
-<div class="product-list">
-    @foreach (var product in _products)
-    {
-        <ProductCard Product="product" OnAddToCart="HandleAddToCart" />
-    }
-</div>
-
-<h2>Cart Summary</h2>
-@if (Cart.Items.Count == 0)
-{
-    <p><em>Cart is empty.</em></p>
-}
-else
-{
-    <ul>
-        @foreach (var line in Cart.DisplayCartItems())
+<section class="storefront">
+    <div class="storefront-grid">
+        @foreach (var product in _displayedProducts)
         {
-            <li>@line</li>
+            <ProductCard Product="product"
+                         Quantity="Cart.GetQuantity(product.ProductID)"
+                         OnAddToCart="HandleAddToCart"
+                         OnIncrement="HandleIncrement"
+                         OnDecrement="HandleDecrement"
+                         OnRemove="HandleRemove" />
         }
-    </ul>
-}
-<p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
+    </div>
+
+    <section class="storefront-cart-summary" aria-label="Cart summary">
+        <h2>Cart Summary</h2>
+        @if (!Cart.Items.Any())
+        {
+            <p><em>Cart is empty.</em></p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var line in Cart.GetGroupedItems())
+                {
+                    <li>@line.Product.Name &times; @line.Quantity — $@line.LineTotal.ToString("F2")</li>
+                }
+            </ul>
+        }
+        <p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
+    </section>
+</section>
 
 @code {
     private List<Product> _products = new();
+    private List<Product> _displayedProducts = new();
 
     protected override void OnInitialized()
     {
         _products = MockProductData.GetSeedProducts();
+        _displayedProducts = _products;
     }
 
     private void HandleAddToCart(Product product)
     {
         Cart.AddProduct(product);
+    }
+
+    private void HandleIncrement(Product product)
+    {
+        Cart.IncrementQuantity(product.ProductID);
+    }
+
+    private void HandleDecrement(Product product)
+    {
+        Cart.DecrementQuantity(product.ProductID);
+    }
+
+    private void HandleRemove(Product product)
+    {
+        Cart.RemoveProduct(product.ProductID);
     }
 }
