@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Audio category placeholder">
+  <rect width="240" height="240" rx="16" fill="#e2f7ee"/>
+  <path d="M60 130 a60 60 0 0 1 120 0" fill="none" stroke="#1f7a5c" stroke-width="8" stroke-linecap="round"/>
+  <rect x="46" y="125" width="28" height="46" rx="10" fill="#1f7a5c"/>
+  <rect x="166" y="125" width="28" height="46" rx="10" fill="#1f7a5c"/>
+</svg>

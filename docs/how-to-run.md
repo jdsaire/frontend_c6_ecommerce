@@ -6,10 +6,13 @@ Three ways to see this app, from least to most setup.
 
 **https://jdsaire.github.io/frontend_c6_ecommerce/**
 
-Click "Products" to add items to the cart, or "Cart Test" to see Activity 1's
-add/remove/display/total sequence run automatically. Deep links like
-`/products` and `/cart-test` work directly, too — a small SPA fallback in the
-Pages workflow handles that on a static host.
+Click "Products" to browse the storefront and add items to your cart.
+Activity 1's test page, `/cart-test`, still exists and still runs its
+add/remove/display/total sequence automatically — it's just no longer
+linked from the sidebar, so reach it directly: append `/cart-test` to the
+URL above. Deep links like `/products` and `/cart-test` work directly either
+way — a small SPA fallback in the Pages workflow handles that on a static
+host.
 
 ## 2. GitHub Codespaces
 

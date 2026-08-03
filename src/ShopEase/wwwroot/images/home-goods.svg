@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Home goods category placeholder">
+  <rect width="240" height="240" rx="16" fill="#fbeee0"/>
+  <path d="M60 100 120 70 180 100 180 170 120 200 60 170 Z" fill="none" stroke="#b5651d" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M60 100 120 130 180 100" fill="none" stroke="#b5651d" stroke-width="8" stroke-linejoin="round"/>
+  <line x1="120" y1="130" x2="120" y2="200" stroke="#b5651d" stroke-width="8"/>
+</svg>

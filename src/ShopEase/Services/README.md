@@ -4,8 +4,15 @@ The business logic that manages cart state, plus the simulated database
 underneath it.
 
 - [`Cart.cs`](Cart.cs) — `AddProduct`, `RemoveProduct`, `DisplayCartItems`, and
-  `CalculateTotal`. Registered in [`Program.cs`](../Program.cs) as a DI
-  singleton, so every page shares the same cart.
+  `CalculateTotal`, Activity 1's four required methods, unchanged since. The
+  storefront-bridge run layered quantity controls on top as additive members
+  — `GetQuantity`, `GetGroupedItems`, `IncrementQuantity`,
+  `DecrementQuantity` — plus an `OnChange` event that independent components
+  (the header's `CartSummary`) subscribe to instead of polling. None of it
+  restructures `Items`; `IncrementQuantity` reuses `AddProduct` directly, and
+  the explicit per-line remove control reuses `RemoveProduct` directly.
+  Registered in [`Program.cs`](../Program.cs) as a DI singleton, so every
+  page shares the same cart.
 - [`ShopDatabase.cs`](ShopDatabase.cs) — **simulated.** This app is a Blazor
   WebAssembly client on static GitHub Pages hosting, with no server process to
   open a real MySQL connection from. This class mirrors the shape of the

@@ -6,8 +6,14 @@ Blazor, front-end frameworks, or web development specifically.
 
 This folder grows alongside the app itself: a new file is added once its
 corresponding activity is built, rather than all at once at the end. It currently
-covers Activities 1 and 2; Activities 3-5 are separate, later deliveries against
-this same repository, and their walkthrough files land when that code does.
+covers Activities 1 and 2, plus a storefront-bridge run between Activities 2 and
+3 that gave the app a real retail shell (catalog, imagery, quantity controls,
+filters, a persistent cart summary) without changing anything either activity's
+underlying code was graded on — that run's changes are folded into `01` and `02`
+inline rather than given a numbered file of their own, since it extended what
+those files describe rather than adding a new activity. Activities 3-5 are still
+separate, later deliveries against this same repository, and their walkthrough
+files land when that code does.
 
 ## What's here
 

@@ -8,6 +8,9 @@ Operational documentation for running, setting up, and grading this project.
 - [`grading-criteria.md`](grading-criteria.md) — the capstone's 18-point
   peer-review breakdown and submission questions, kept here for reference —
   not answered in this repository.
+- [`storefront-decisions.md`](storefront-decisions.md) — why stock is
+  displayed but not enforced, and why cart-line removal is a separate
+  explicit control rather than decrementing quantity to zero.
 
 Looking for a plain-language explanation of *how* the app works, rather than
 how to run it? See [`../learning-mode/`](../learning-mode/README.md) instead.

@@ -29,11 +29,17 @@ happen in one file.
 ## Meet the Building Block: the Product Class
 
 [`Product.cs`](../src/ShopEase/Models/Product.cs) is the smaller of the two classes,
-and everything else builds on it. It has exactly four properties, fixed by the
-capstone brief: `ProductID`, `Name`, `Price`, `Category`. `ProductID` deserves a
-second look — it exists so that later code can say "remove *this specific* product"
+and everything else builds on it. It has four properties fixed by the capstone
+brief: `ProductID`, `Name`, `Price`, `Category`. `ProductID` deserves a second
+look — it exists so that later code can say "remove *this specific* product"
 without needing to compare every other property, the same way a **primary key**
 lets a real database table find one exact row.
+
+A later storefront-bridge run added two more properties, `Stock` and
+`ImageUrl`, layered on top without touching these original four or
+`GetDetails()`'s output format — see
+[`Pages/README.md`](../src/ShopEase/Pages/README.md) and
+[`Models/README.md`](../src/ShopEase/Models/README.md) for what they're for.
 
 The one method on `Product`, `GetDetails()`, formats those four properties into a
 single line:
@@ -51,9 +57,12 @@ column-style layout would drift depending on what a given product happens to cos
 None of the products in this app are real — there's no supplier feed, no admin
 panel, no outside service. [`MockProductData.cs`](../src/ShopEase/Models/MockProductData.cs)
 is a small static class with one method, `GetSeedProducts()`, that returns the same
-four made-up products every time it's called: a laptop, a mouse, a mug, and a lamp.
-This is **mock data** — invented for building and testing, standing in for whatever
-a real product catalog would eventually supply.
+made-up products every time it's called. Activity 1 originally worked with four —
+a laptop, a mouse, a mug, and a lamp — and a later storefront-bridge run expanded
+the list to twelve across four categories, keeping those original four unchanged
+so this file's arithmetic examples still add up the same way. This is **mock
+data** — invented for building and testing, standing in for whatever a real
+product catalog would eventually supply.
 
 ## The Cart Class: Storing, Removing, Displaying, Totaling
 
@@ -122,6 +131,14 @@ browser rather than executing a console binary. On its first load, it seeds thre
 products, adds all three to the cart, removes one by ID, and then renders whatever
 `DisplayCartItems()` and `CalculateTotal()` actually return — not hardcoded text,
 the live output of the same `Cart` methods described above.
+
+A later storefront-bridge run removed `/cart-test` from the sidebar nav menu —
+it's no longer something a shopper clicks into while browsing the app — but the
+page and its route are still here, unchanged, still directly reachable at
+`/cart-test`, and still the same test program described above. The same
+underlying `AddProduct`/`RemoveProduct`/`DisplayCartItems`/`CalculateTotal`
+logic it proves out is also what the storefront's "Add to Cart" button and
+quantity controls run live on `/products`, every time a shopper uses them.
 
 ## What's Next
 

@@ -1,9 +1,10 @@
 namespace ShopEase.Models;
 
 // One item in the ShopEase catalog. This is a plain C# class with no Blazor
-// or database dependency of its own — Activity 1 asks for exactly these four
-// properties, so that both the Cart's business logic and (later) the
-// ProductCard component can work with the same shape of data.
+// or database dependency of its own. Activity 1 fixes ProductID, Name,
+// Price, and Category, plus GetDetails()'s exact output — Stock and
+// ImageUrl below are storefront additions layered on top, added without
+// touching any of the original four.
 public class Product
 {
     // Unique identifier for this product. Cart.RemoveProduct(int) looks up
@@ -16,6 +17,14 @@ public class Product
     public decimal Price { get; set; }
 
     public string Category { get; set; } = string.Empty;
+
+    // Units currently on hand. Displayed on the storefront card; not yet
+    // enforced against cart quantity — see docs/ for the deferral.
+    public int Stock { get; set; }
+
+    // Relative path (under wwwroot/) to this product's placeholder image.
+    // One locally-authored SVG per category — see wwwroot/images/README.md.
+    public string ImageUrl { get; set; } = string.Empty;
 
     // Formats this product's details on one line, in the exact layout the
     // capstone brief fixes:

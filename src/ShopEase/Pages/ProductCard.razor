@@ -2,21 +2,81 @@
    names this exact location — see Pages/README.md for why this is kept as-is. *@
 
 <div class="product-card">
-    <p>@Product.GetDetails()</p>
-    <button class="btn btn-primary" @onclick="HandleAddToCartClick">Add to Cart</button>
+    <img class="product-card__image" src="@Product.ImageUrl" alt="@($"{Product.Category} placeholder image")" />
+
+    <div class="product-card__body">
+        <p class="product-card__category">@Product.Category</p>
+        <h3 class="product-card__name">@Product.Name</h3>
+        <p class="product-card__price">$@Product.Price.ToString("F2")</p>
+        <p class="product-card__stock">@Product.Stock in stock</p>
+
+        @if (Quantity <= 0)
+        {
+            <button class="btn btn-primary product-card__add" @onclick="HandleAddToCartClick">
+                Add to Cart
+            </button>
+        }
+        else
+        {
+            <div class="product-card__quantity" role="group" aria-label="@($"Quantity for {Product.Name}")">
+                <button class="product-card__step" type="button" disabled="@(Quantity <= Cart.MinQuantity)"
+                        @onclick="HandleDecrementClick" aria-label="@($"Decrease quantity of {Product.Name}")">
+                    −
+                </button>
+                <span class="product-card__qty-value">@Quantity</span>
+                <button class="product-card__step" type="button" disabled="@(Quantity >= Cart.MaxQuantity)"
+                        @onclick="HandleIncrementClick" aria-label="@($"Increase quantity of {Product.Name}")">
+                    +
+                </button>
+                <button class="product-card__remove" type="button" @onclick="HandleRemoveClick"
+                        aria-label="@($"Remove {Product.Name} from cart")">
+                    🗑
+                </button>
+            </div>
+        }
+    </div>
 </div>
 
 @code {
     [Parameter]
     public Product Product { get; set; } = default!;
 
-    // Raised when the button above is clicked; the parent page supplies the
-    // handler, so ProductCard itself never touches Cart directly.
+    // Raised when "Add to Cart" is clicked (Quantity == 0); the parent page
+    // supplies the handler, so ProductCard itself never touches Cart directly.
     [Parameter]
     public EventCallback<Product> OnAddToCart { get; set; }
+
+    // How many units of Product are currently in the parent's cart. 0 shows
+    // the "Add to Cart" button; anything higher shows the stepper instead.
+    [Parameter]
+    public int Quantity { get; set; }
+
+    [Parameter]
+    public EventCallback<Product> OnIncrement { get; set; }
+
+    [Parameter]
+    public EventCallback<Product> OnDecrement { get; set; }
+
+    [Parameter]
+    public EventCallback<Product> OnRemove { get; set; }
 
     private async Task HandleAddToCartClick()
     {
         await OnAddToCart.InvokeAsync(Product);
+    }
+
+    private async Task HandleIncrementClick()
+    {
+        await OnIncrement.InvokeAsync(Product);
+    }
+
+    private async Task HandleDecrementClick()
+    {
+        await OnDecrement.InvokeAsync(Product);
+    }
+
+    private async Task HandleRemoveClick()
+    {
+        await OnRemove.InvokeAsync(Product);
     }
 }

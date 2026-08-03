@@ -1,0 +1,33 @@
+@inject Cart Cart
+@implements IDisposable
+
+<div class="cart-summary" aria-label="@($"Cart: {Cart.Items.Count} items, ${Cart.CalculateTotal():F2} total")">
+    <svg class="cart-summary__icon" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M1 2h2l1.6 8.4a1 1 0 0 0 1 .8h6.1a1 1 0 0 0 1-.78L14 5H4"
+              fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="6.5" cy="14" r="1.1" fill="currentColor" />
+        <circle cx="11.5" cy="14" r="1.1" fill="currentColor" />
+    </svg>
+    <span class="cart-summary__count">@Cart.Items.Count</span>
+    <span class="cart-summary__total">$@Cart.CalculateTotal().ToString("F2")</span>
+</div>
+
+@code {
+    // Subscribes to Cart.OnChange so this header indicator refreshes the
+    // moment a page mutates the cart, without either side needing to know
+    // about the other beyond the shared Cart singleton.
+    protected override void OnInitialized()
+    {
+        Cart.OnChange += HandleCartChanged;
+    }
+
+    private void HandleCartChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Cart.OnChange -= HandleCartChanged;
+    }
+}
