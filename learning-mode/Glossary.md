@@ -81,7 +81,7 @@ another visitor's browser — classically, typing `<script>...</script>` into a
 field that isn't encoded before being displayed. Blazor HTML-encodes `@`
 interpolated values by default, so this project was never vulnerable to it,
 and has zero uses of the one thing (`MarkupString`) that would turn that
-protection off. Covered in [04, "Cross-Site Scripting, Already Prevented."](04-Input-Validation-and-Authentication.md#cross-site-scripting-already-prevented)
+protection off. Covered in [04, "Cross-Site Scripting and Blazor's Default Encoding."](04-Input-Validation-and-Authentication.md#cross-site-scripting-and-blazors-default-encoding)
 
 ## Data sanitization
 

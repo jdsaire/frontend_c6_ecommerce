@@ -130,4 +130,4 @@ new screens.
 | Modify your Blazor form | No form existed | Added a real `EditForm`-based search box and login form (Step 1), plus a checkout form (patch) |
 | ASP.NET Identity | No server to run it on | Real `AuthenticationStateProvider`/`AuthorizeView` abstraction, simulated in-memory store |
 | Prevent SQL injection | No SQL anywhere | Input validation against injection-associated patterns; documented that parameterized queries are the real server-side defense this app doesn't have |
-| Prevent XSS | Already prevented by Blazor's default encoding | Preserved the no-`MarkupString` property, demonstrated it on `/security-test` |
+| Prevent XSS | Already encoded by default (Blazor's own behavior, predating this run) | Preserved the no-`MarkupString` property, demonstrated it on `/security-test` |

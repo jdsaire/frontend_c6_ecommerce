@@ -40,7 +40,7 @@ is asking for without claiming a query got fixed that was never broken. In a rea
 with a real MySQL backend, the actual fix for SQL injection is a parameterized query on
 the server — not filtering on the client.
 
-## Cross-Site Scripting, Already Prevented
+## Cross-Site Scripting and Blazor's Default Encoding
 
 **Cross-site scripting (XSS)** is when an attacker gets their own script to run inside
 someone else's page — classically, by typing `<script>...</script>` into a field that
