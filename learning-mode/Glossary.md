@@ -113,7 +113,9 @@ properties of `Product`. Covered in [01, "Classes, Properties, and Methods."](01
 ## Razor page
 
 A `.razor` file marked with an `@page` directive at the top, giving it its own web
-address. `CartTest.razor` is one, reachable at `/cart-test`. Covered in [01, "Proving It Works."](01-Business-Logic-Foundations.md#proving-it-works-the-carttest-page)
+address. `CartTest.razor` is one, reachable at `/cart-test` — still true after
+the storefront-bridge run removed it from the sidebar nav, since removing a nav
+link doesn't remove the `@page` directive underneath it. Covered in [01, "Proving It Works."](01-Business-Logic-Foundations.md#proving-it-works-the-carttest-page)
 
 ## Simulated database
 

@@ -1,16 +1,23 @@
 # ShopEase
 
 ShopEase is the e-commerce web application built for the Microsoft Frontend
-Developer Specialization capstone project. This run covers Activity 1
+Developer Specialization capstone project. It started with Activity 1
 (business logic) and Activity 2 (Blazor components for product listings) of
-the capstone's five activities.
+the capstone's five activities, and has since had a storefront-bridge pass
+that gave it a real retail shell — expanded catalog, imagery, quantity
+controls, filtering, a persistent cart summary — without changing any of
+Activity 1 or 2's graded code.
 
 ## See It Live
 
 **https://jdsaire.github.io/frontend_c6_ecommerce/**
 
-Click "Products" to add items to the cart, or "Cart Test" to see Activity 1's
-required add/remove/display/total sequence rendered on screen.
+Click "Products" to browse the storefront: filter by category, sort by
+price, and add items to your cart. Activity 1's original test page still
+exists at `/cart-test` — it's just no longer linked in the sidebar, since
+it was built for grading evidence rather than as something a shopper
+browses into. See [`docs/how-to-run.md`](docs/how-to-run.md) for every way
+to reach it.
 
 Want to run it yourself instead? See [`docs/how-to-run.md`](docs/how-to-run.md)
 for GitHub Codespaces and VS Code instructions.
@@ -36,6 +43,16 @@ for GitHub Codespaces and VS Code instructions.
   (a reusable component with a `Product` parameter and an "Add to Cart" event)
   and [`Products.razor`](src/ShopEase/Pages/Products.razor) (a listing page
   rendering multiple cards, all wired to the same shared cart).
+- **Storefront bridge** (between Activities 2 and 3): a twelve-product
+  catalog with stock and placeholder imagery, a retail
+  [`ProductCard`](src/ShopEase/Pages/ProductCard.razor) with a quantity
+  stepper and remove control, category/price filtering on
+  [`Products.razor`](src/ShopEase/Pages/Products.razor), a persistent
+  [`CartSummary`](src/ShopEase/Layout/CartSummary.razor) in the header, and a
+  real [`Home.razor`](src/ShopEase/Pages/Home.razor) landing page. Built as
+  additions on top of Activity 1/2's classes and component parameters, not
+  replacements for them — see [`docs/storefront-decisions.md`](docs/storefront-decisions.md)
+  for the deferred and resolved design decisions behind it.
 
 ## Documentation
 
@@ -43,8 +60,8 @@ for GitHub Codespaces and VS Code instructions.
   capstone's grading criteria (kept for reference, not answered here).
 - [`learning-mode/`](learning-mode/README.md) — a plain-language walkthrough of
   how this app was built and why, plus a glossary.
-- [`handoff/`](handoff/README.md) — the plan this run was built from and its
-  completion report.
+- [`handoff/`](handoff/README.md) — the plan each run was built from and its
+  completion report, one subfolder per run.
 
 Every folder under `src/ShopEase/` also has its own README explaining what
 lives there.
@@ -59,14 +76,24 @@ clearly-labeled in-memory stand-in that mirrors the shape of that requirement
 instead. No file in this repository claims a real database connection, real
 authentication, or any server-side component exists.
 
-## Out of Scope (This Run)
+## Out of Scope (So Far)
 
-This run covers Activities 1 and 2 only. The remaining three activities are
-separate, later deliveries against this same repository:
+Activities 1 and 2 are graded and complete; the storefront bridge extended
+their UI without altering that graded code. Three activities, plus the parts
+of the storefront bridge that fall under them, are still separate, later
+deliveries against this same repository:
 
-- **Activity 3** — UI/UX styling and responsive design.
+- **Activity 3** — UI/UX styling and responsive design: media queries and
+  responsive breakpoints (the storefront bridge's styling pass is desktop
+  only), plus an accessibility audit.
 - **Activity 4** — secure coding practices and authentication.
-- **Activity 5** — persisted state management.
+- **Activity 5** — persisted state management. The storefront bridge's cart
+  state does not survive a page refresh, by design — that's this activity's
+  job, not an oversight here.
+
+Also deferred, recorded in [`docs/storefront-decisions.md`](docs/storefront-decisions.md):
+out-of-stock and insufficient-stock enforcement. `Stock` is displayed on
+every card but not yet checked against cart quantity.
 
 ## Attribution
 

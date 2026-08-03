@@ -40,11 +40,23 @@ just one. [`Products.razor`](../src/ShopEase/Pages/Products.razor) hands it a
 different `Product` object each time it renders one:
 
 ```razor
-<ProductCard Product="product" OnAddToCart="HandleAddToCart" />
+<ProductCard Product="product"
+             Quantity="Cart.GetQuantity(product.ProductID)"
+             OnAddToCart="HandleAddToCart"
+             OnIncrement="HandleIncrement"
+             OnDecrement="HandleDecrement"
+             OnRemove="HandleRemove" />
 ```
 
 Change what `Products.razor` loops over, and every card updates automatically —
 nothing about `ProductCard` itself has to change.
+
+The four parameters beyond `Product` and `OnAddToCart` — `Quantity`,
+`OnIncrement`, `OnDecrement`, `OnRemove` — are a storefront-bridge addition,
+not part of Activity 2's original brief. They're new parameters layered on
+top, the same pattern as `Product`/`OnAddToCart` below, so the card can show
+a quantity stepper and a remove control once an item is already in the cart
+without touching the two parameters Activity 2 defined.
 
 ## Event-Driven Development: Getting the Click Back Out
 
@@ -82,21 +94,31 @@ callback:
 private void HandleAddToCart(Product product)
 {
     Cart.AddProduct(product);
+    Cart.NotifyChange();
 }
 ```
 
-That one line is the entire bridge between "a card got clicked" and "the cart
-changed." Below the cards, the same page renders `Cart.DisplayCartItems()` and
-`Cart.CalculateTotal()` — the exact same `Cart` methods `CartTest.razor` used in
-Activity 1. Nothing about `Cart` changed to make this work; it's the same
-singleton, shared across two different pages by dependency injection, exactly as
-described in [01, "Sharing One Cart Across Pages."](01-Business-Logic-Foundations.md#sharing-one-cart-across-pages-dependency-injection)
+`Cart.AddProduct(product)` is that same bridge between "a card got clicked" and
+"the cart changed" — the exact same `Cart` method `CartTest.razor` used in
+Activity 1, untouched. `Cart.NotifyChange()` beside it is a storefront-bridge
+addition: it tells the header's persistent cart summary (a separate component,
+not a child of this page) to refresh, since it has no other way to know the
+cart just changed. Below the cards, the same page renders a quantity-aware
+summary built from `Cart.GetGroupedItems()` and `Cart.CalculateTotal()` — the
+same `Cart` state, still the same singleton shared across pages by dependency
+injection, exactly as described in
+[01, "Sharing One Cart Across Pages."](01-Business-Logic-Foundations.md#sharing-one-cart-across-pages-dependency-injection)
 Add a product on `/products`, then check `/cart-test`'s own display logic against
 the same underlying `Cart.Items`, and it's the same list both times.
 
 ## What's Next
 
-This run stops here — Activities 3 through 5 (responsive styling, secure coding
-practices, and persisted state) are separate, later deliveries against this same
-repository, not part of what's covered in these two walkthrough files. When they
-land, this folder gains a `03-...md` continuing exactly where this file leaves off.
+Between Activity 2 and Activity 3, a storefront-bridge run took what this file
+describes and gave it a real retail shell: a twelve-product catalog, a
+quantity stepper and remove control on each card, category and price
+filtering, a persistent header cart summary, and a landing page — without
+changing anything this file or `01` describes about `Product`, `Cart`, or
+`ProductCard`'s original two parameters. Activities 3 through 5 (responsive
+styling, secure coding practices, and persisted state) are still separate,
+later deliveries against this same repository. When they land, this folder
+gains a `03-...md` continuing exactly where this file leaves off.
