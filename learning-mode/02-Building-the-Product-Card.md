@@ -118,7 +118,10 @@ describes and gave it a real retail shell: a twelve-product catalog, a
 quantity stepper and remove control on each card, category and price
 filtering, a persistent header cart summary, and a landing page — without
 changing anything this file or `01` describes about `Product`, `Cart`, or
-`ProductCard`'s original two parameters. Activities 3 through 5 (responsive
-styling, secure coding practices, and persisted state) are still separate,
-later deliveries against this same repository. When they land, this folder
-gains a `03-...md` continuing exactly where this file leaves off.
+`ProductCard`'s original two parameters. That same run left a couple of loose
+ends (a dead sale-preview section on Home, a header-alignment bug, no paging
+on the grid) that were cleaned up in a small v2.2 run just before Activity 3.
+Activity 3 (responsive styling and accessibility) is covered next, in
+[`03-Responsive-UI-and-Accessibility.md`](03-Responsive-UI-and-Accessibility.md).
+Activities 4 and 5 (secure coding practices and persisted state) are still
+separate, later deliveries against this same repository.

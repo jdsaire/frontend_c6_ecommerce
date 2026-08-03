@@ -30,15 +30,18 @@ The peer-review submission answers these six questions in text-field entries
 
 ## Where This Repository Currently Stands
 
-This run has built Activities 1 and 2 only:
+Activities 1 through 3 are built:
 
 - **Business logic** (question 4, in part): done — see
   [`../learning-mode/01-Business-Logic-Foundations.md`](../learning-mode/01-Business-Logic-Foundations.md).
 - **Front-end components** (question 4, in part): done — see
   [`../learning-mode/02-Building-the-Product-Card.md`](../learning-mode/02-Building-the-Product-Card.md).
-- **UI/UX, security, and state management** (questions 4-6): not yet built.
-  These correspond to Activities 3-5, which are separate, later deliveries
-  against this same repository.
+- **UI/UX** (question 4, in part): done — styling, responsive breakpoints,
+  and an accessibility pass — see
+  [`../learning-mode/03-Responsive-UI-and-Accessibility.md`](../learning-mode/03-Responsive-UI-and-Accessibility.md).
+- **Security and state management** (questions 4-6): not yet built. These
+  correspond to Activities 4-5, which are separate, later deliveries against
+  this same repository.
 
 Since the submission questions are answered outside this repository, this
 file exists purely so the grading breakdown and question list are on record
