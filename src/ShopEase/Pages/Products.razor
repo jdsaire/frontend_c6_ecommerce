@@ -4,6 +4,35 @@
 <PageTitle>Shop | ShopEase</PageTitle>
 
 <section class="storefront">
+    <div class="storefront-toolbar" aria-label="Product filters">
+        <label class="storefront-filter">
+            <svg class="storefront-filter__icon" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M1 2h14l-5 6v5l-4 2v-7z" fill="currentColor" />
+            </svg>
+            <span class="visually-hidden">Filter by category</span>
+            <select @bind="_selectedCategory" @bind:after="ApplyFilters">
+                <option value="All">All Categories</option>
+                @foreach (var category in _categories)
+                {
+                    <option value="@category">@category</option>
+                }
+            </select>
+        </label>
+
+        <label class="storefront-filter">
+            <svg class="storefront-filter__icon" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4 2v10M4 12l-2.5-2.5M4 12l2.5-2.5M12 14V4M12 4l-2.5 2.5M12 4l2.5 2.5"
+                      stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="visually-hidden">Sort by price</span>
+            <select @bind="_sortOrder" @bind:after="ApplyFilters">
+                <option value="none">Sort: Featured</option>
+                <option value="price-asc">Price: Low to High ↑</option>
+                <option value="price-desc">Price: High to Low ↓</option>
+            </select>
+        </label>
+    </div>
+
     <div class="storefront-grid">
         @foreach (var product in _displayedProducts)
         {
@@ -38,11 +67,29 @@
 @code {
     private List<Product> _products = new();
     private List<Product> _displayedProducts = new();
+    private List<string> _categories = new();
+    private string _selectedCategory = "All";
+    private string _sortOrder = "none";
 
     protected override void OnInitialized()
     {
         _products = MockProductData.GetSeedProducts();
-        _displayedProducts = _products;
+        _categories = _products.Select(p => p.Category).Distinct().OrderBy(c => c).ToList();
+        ApplyFilters();
+    }
+
+    private void ApplyFilters()
+    {
+        IEnumerable<Product> filtered = _selectedCategory == "All"
+            ? _products
+            : _products.Where(p => p.Category == _selectedCategory);
+
+        _displayedProducts = _sortOrder switch
+        {
+            "price-asc" => filtered.OrderBy(p => p.Price).ToList(),
+            "price-desc" => filtered.OrderByDescending(p => p.Price).ToList(),
+            _ => filtered.ToList(),
+        };
     }
 
     private void HandleAddToCart(Product product)
