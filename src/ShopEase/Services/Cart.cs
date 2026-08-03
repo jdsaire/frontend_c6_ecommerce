@@ -126,6 +126,20 @@ public class Cart
         NotifyChange();
         return true;
     }
+
+    // Removes every item from the cart and the simulated database at once, for use
+    // after a checkout is confirmed. Distinct from RemoveProduct(int), which removes
+    // one line by ID -- this clears the whole cart the way a completed order would.
+    public void ClearCart()
+    {
+        foreach (var productId in Items.Select(p => p.ProductID).Distinct().ToList())
+        {
+            _shopDatabase.DeleteProduct(productId);
+        }
+
+        Items.Clear();
+        NotifyChange();
+    }
 }
 
 // One grouped cart line for storefront display: a product and how many
