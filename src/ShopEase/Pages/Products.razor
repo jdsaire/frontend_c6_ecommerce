@@ -53,12 +53,26 @@
     <div class="storefront-grid">
         @foreach (var product in _displayedProducts.Take(_visibleCount))
         {
-            <ProductCard Product="product"
-                         Quantity="Cart.GetQuantity(product.ProductID)"
-                         OnAddToCart="HandleAddToCart"
-                         OnIncrement="HandleIncrement"
-                         OnDecrement="HandleDecrement"
-                         OnRemove="HandleRemove" />
+            <AuthorizeView Context="cartAuthState">
+                <Authorized>
+                    <ProductCard Product="product"
+                                 Quantity="Cart.GetQuantity(product.ProductID)"
+                                 CanModifyCart="true"
+                                 OnAddToCart="HandleAddToCart"
+                                 OnIncrement="HandleIncrement"
+                                 OnDecrement="HandleDecrement"
+                                 OnRemove="HandleRemove" />
+                </Authorized>
+                <NotAuthorized>
+                    <ProductCard Product="product"
+                                 Quantity="Cart.GetQuantity(product.ProductID)"
+                                 CanModifyCart="false"
+                                 OnAddToCart="HandleAddToCart"
+                                 OnIncrement="HandleIncrement"
+                                 OnDecrement="HandleDecrement"
+                                 OnRemove="HandleRemove" />
+                </NotAuthorized>
+            </AuthorizeView>
         }
     </div>
 
