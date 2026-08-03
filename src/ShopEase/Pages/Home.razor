@@ -1,7 +1,43 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>ShopEase</PageTitle>
 
-<h1>Hello, world!</h1>
+<section class="landing-hero">
+    <h1>ShopEase</h1>
+    <p>
+        Electronics, computer accessories, audio, and everyday home goods —
+        browse the catalog and build your cart.
+    </p>
+    <a class="btn btn-primary landing-hero__cta" href="products">Shop All Products</a>
+</section>
 
-Welcome to your new app.
+<section class="landing-sale" aria-label="Sale campaign">
+    <h2>On Sale This Week</h2>
+    <div class="landing-sale__grid">
+        @foreach (var product in _saleProducts)
+        {
+            <a class="landing-sale__item" href="products">
+                <img src="@product.ImageUrl" alt="@($"{product.Category} placeholder image")" />
+                <span class="landing-sale__name">@product.Name</span>
+                <span class="landing-sale__price">$@product.Price.ToString("F2")</span>
+            </a>
+        }
+    </div>
+</section>
+
+@code {
+    private static readonly int[] SaleProductIds = { 1, 4, 7, 11 };
+
+    private List<Product> _saleProducts = new();
+
+    protected override void OnInitialized()
+    {
+        // A simple, deterministic preview slice of the catalog — one
+        // product per category — routing shoppers into the storefront.
+        // Not a real discount engine; there is no separate "sale price"
+        // field on Product.
+        _saleProducts = MockProductData.GetSeedProducts()
+            .Where(p => SaleProductIds.Contains(p.ProductID))
+            .ToList();
+    }
+}
