@@ -1,0 +1,298 @@
+/* ================================================================
+   ShopEase storefront styling.
+   Mobile-first: base rules below target narrow viewports; the
+   responsive breakpoints section at the end of this file layers on
+   tablet (>=641px) and desktop (>=1025px) adjustments, matching the
+   641px cutover already used by Layout/MainLayout.razor.css and
+   Layout/NavMenu.razor.css.
+   ================================================================ */
+
+:root {
+    --shopease-accent: #1b6ec2;
+    --shopease-ink: #1c1f26;
+    --shopease-muted: #5b6472;
+    --shopease-border: #7f8794;
+    --shopease-surface: #ffffff;
+}
+
+/* ---- Landing page ---- */
+
+.landing-hero {
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+    background: linear-gradient(180deg, #eef4fb 0%, #ffffff 100%);
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+}
+
+.landing-hero h1 {
+    font-size: 1.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.landing-hero p {
+    color: var(--shopease-muted);
+    max-width: 40rem;
+    margin: 0 auto 1.5rem;
+}
+
+.landing-hero__cta {
+    display: inline-block;
+    padding: 0.65rem 1.75rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* ---- Storefront toolbar (filters/sort) ---- */
+
+.storefront-toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: #f7f9fb;
+    border: 1px solid var(--shopease-border);
+    border-radius: 10px;
+}
+
+.storefront-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.storefront-filter__icon {
+    width: 18px;
+    height: 18px;
+    color: var(--shopease-muted);
+    flex-shrink: 0;
+}
+
+.storefront-filter select {
+    border: 1px solid var(--shopease-border);
+    border-radius: 6px;
+    padding: 0.35rem 0.6rem;
+    background: var(--shopease-surface);
+    font-size: 0.95rem;
+}
+
+/* ---- Product grid and card ---- */
+
+.storefront-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.storefront-show-more {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin: -0.5rem 0 2rem;
+}
+
+.storefront-show-more__count {
+    color: var(--shopease-muted);
+    margin: 0;
+}
+
+.storefront-show-more__button {
+    padding: 0.55rem 1.5rem;
+    font-weight: 600;
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--shopease-border);
+    border-radius: 10px;
+    background: var(--shopease-surface);
+    overflow: hidden;
+    transition: box-shadow 0.15s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.product-card__image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: #f4f6f8;
+}
+
+.product-card__body {
+    padding: 1rem 1.1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.product-card__category {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: var(--shopease-muted);
+    margin: 0;
+}
+
+.product-card__name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 0.2rem;
+}
+
+.product-card__price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--shopease-accent);
+    margin: 0.1rem 0 0;
+}
+
+.product-card__stock {
+    font-size: 0.8rem;
+    color: var(--shopease-muted);
+    margin: 0.15rem 0 0.6rem;
+}
+
+.product-card__add {
+    margin-top: 0.25rem;
+    padding: 0.55rem 1.5rem;
+    font-weight: 600;
+}
+
+.product-card__quantity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.product-card__step {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 6px;
+    border: 1px solid var(--shopease-border);
+    background: var(--shopease-surface);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.product-card__step:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.product-card__qty-value {
+    min-width: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.product-card__remove {
+    margin-left: auto;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1.05rem;
+    color: #b3261e;
+}
+
+/* ---- On-page cart summary (below the grid) ---- */
+
+.storefront-cart-summary {
+    border-top: 1px solid var(--shopease-border);
+    padding-top: 1.25rem;
+}
+
+.storefront-cart-summary h2 {
+    margin-bottom: 0.5rem;
+}
+
+/* ---- Persistent header cart summary ---- */
+
+.cart-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: var(--shopease-accent);
+    color: #fff;
+    font-weight: 600;
+}
+
+.cart-summary__icon {
+    width: 18px;
+    height: 18px;
+}
+
+.cart-summary__count {
+    background: #fff;
+    color: var(--shopease-accent);
+    border-radius: 999px;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    padding: 0 0.3rem;
+}
+
+.cart-summary__total {
+    font-size: 0.95rem;
+}
+
+/* ================================================================
+   Accessibility — visible focus indicator for custom controls that
+   are not covered by app.css's .btn/.form-control focus rule
+   (stepper buttons, remove control, and the toolbar's plain
+   <select> elements). Reuses that same rule's colors rather than
+   inventing a second focus style.
+   ================================================================ */
+
+.product-card__step:focus,
+.product-card__remove:focus,
+.storefront-filter select:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* ================================================================
+   Responsive breakpoints — mobile (base, above), tablet, desktop.
+   641px matches the sidebar/nav cutover already used by
+   Layout/MainLayout.razor.css and Layout/NavMenu.razor.css.
+   ================================================================ */
+
+@media (min-width: 641px) {
+    .landing-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .storefront-toolbar {
+        flex-direction: row;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .storefront-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cart-summary {
+        gap: 0.5rem;
+        padding: 0.4rem 0.9rem;
+    }
+}
+
+@media (min-width: 1025px) {
+    .storefront-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

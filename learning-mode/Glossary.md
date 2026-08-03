@@ -4,8 +4,9 @@ Not meant to be read start to finish — dip into it whenever a word in the
 walkthroughs or the `/src` folder READMEs doesn't ring a bell. Each entry says what
 the term means here, and where to see it in the project. Grows alongside the
 walkthrough files — it currently covers everything introduced in
-[`01-Business-Logic-Foundations.md`](01-Business-Logic-Foundations.md) and
-[`02-Building-the-Product-Card.md`](02-Building-the-Product-Card.md).
+[`01-Business-Logic-Foundations.md`](01-Business-Logic-Foundations.md),
+[`02-Building-the-Product-Card.md`](02-Building-the-Product-Card.md), and
+[`03-Responsive-UI-and-Accessibility.md`](03-Responsive-UI-and-Accessibility.md).
 
 ## Blazor WebAssembly
 
@@ -20,6 +21,14 @@ plain C# with no Blazor of its own. Covered in [01, "Proving It Works."](01-Busi
 A blueprint describing what a thing has (its properties) and what it can do (its
 methods), without being any particular instance of that thing yet. `Product` and
 `Cart` are this project's two business-logic classes. Covered in [01, "Classes, Properties, and Methods."](01-Business-Logic-Foundations.md#classes-properties-and-methods-before-any-of-the-code)
+
+## Color contrast
+
+A measured ratio between a foreground and background color, not a subjective
+"looks readable" judgment. WCAG requires at least 4.5:1 for normal body text
+and 3:1 for larger text and meaningful UI boundaries like borders; this
+project's border color was measured, found short of that at about 1.26:1, and
+replaced with one measuring about 3.62:1. Covered in [03, "Accessibility: Contrast, Keyboard Use, and Focus."](03-Responsive-UI-and-Accessibility.md#accessibility-contrast-keyboard-use-and-focus)
 
 ## Component
 
@@ -62,17 +71,46 @@ A programming approach where a user action — a button click, here — triggers
 to run in response, rather than the program deciding on its own when to act.
 `ProductCard`'s "Add to Cart" button is this project's example. Covered in [02, "Event-Driven Development."](02-Building-the-Product-Card.md#event-driven-development-getting-the-click-back-out)
 
+## Focus indicator
+
+The visible sign — usually an outline or a glow — that shows which element on
+the page currently has keyboard focus. This project extends its existing
+focus-ring style to a few controls (the quantity stepper, the remove control,
+the toolbar dropdowns) that weren't covered by it before, rather than
+suppressing or replacing it. Covered in [03, "Accessibility: Contrast, Keyboard Use, and Focus."](03-Responsive-UI-and-Accessibility.md#accessibility-contrast-keyboard-use-and-focus)
+
+## Keyboard operability
+
+Whether every interactive control can be reached with the Tab key and
+activated with Enter or Space, without a mouse. True here mostly "for free"
+because the app uses real `<button>` and `<select>` elements everywhere and
+never overrides tab order with a custom `tabindex`. Covered in [03, "Accessibility: Contrast, Keyboard Use, and Focus."](03-Responsive-UI-and-Accessibility.md#accessibility-contrast-keyboard-use-and-focus)
+
 ## `List<T>`
 
 .NET's growable, ordered collection type — the natural fit for "however many
 products happen to be in the cart right now." Both `Cart.Items` and the simulated
 database's internal storage are `List<Product>`. Covered in [01, "The Cart Class."](01-Business-Logic-Foundations.md#the-cart-class-storing-removing-displaying-totaling)
 
+## Media query
+
+A block of CSS that only applies when some condition about the browser
+window — usually its width — is true. This project's storefront grid uses
+`@media (min-width: 641px)` and `@media (min-width: 1025px)` to go from one
+column to two to three as the window widens. Covered in [03, "What a Media Query Is."](03-Responsive-UI-and-Accessibility.md#what-a-media-query-is)
+
 ## Method
 
 A named action a class can perform, written as a function that lives inside it.
 `GetDetails()`, `AddProduct()`, and `CalculateTotal()` are all methods. Covered in
 [01, "Classes, Properties, and Methods."](01-Business-Logic-Foundations.md#classes-properties-and-methods-before-any-of-the-code)
+
+## Mobile-first
+
+A way of writing responsive CSS where the plain, un-wrapped rule targets the
+narrowest screen, and each media query layers on a change for progressively
+wider ones — rather than writing for desktop first and carving out exceptions
+for small screens. Covered in [03, "What a Media Query Is."](03-Responsive-UI-and-Accessibility.md#what-a-media-query-is)
 
 ## Mock data
 
@@ -132,3 +170,11 @@ A dependency-injection lifetime meaning exactly one instance is created and shar
 by the whole app for as long as the browser tab stays open. `Cart` and
 `ShopDatabase` are both registered as singletons, which is what lets cart state
 stay consistent across different pages. Covered in [01, "Sharing One Cart Across Pages."](01-Business-Logic-Foundations.md#sharing-one-cart-across-pages-dependency-injection)
+
+## Visual hierarchy
+
+The idea that the most important thing on screen should be the easiest to
+notice, and less important things should visibly recede — through size,
+weight, color, and spacing rather than through explanation. On a product
+card, the price is made larger and bolder than the category or stock line for
+exactly this reason. Covered in [03, "Building a Clearer Visual Hierarchy."](03-Responsive-UI-and-Accessibility.md#building-a-clearer-visual-hierarchy)

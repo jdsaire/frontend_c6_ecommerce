@@ -3,17 +3,18 @@
 ShopEase is the e-commerce web application built for the Microsoft Frontend
 Developer Specialization capstone project. It started with Activity 1
 (business logic) and Activity 2 (Blazor components for product listings) of
-the capstone's five activities, and has since had a storefront-bridge pass
-that gave it a real retail shell — expanded catalog, imagery, quantity
-controls, filtering, a persistent cart summary — without changing any of
-Activity 1 or 2's graded code.
+the capstone's five activities, had a storefront-bridge pass that gave it a
+real retail shell — expanded catalog, imagery, quantity controls, filtering,
+a persistent cart summary — and has now completed Activity 3: a full styling
+and responsive-design pass with mobile/tablet/desktop breakpoints and an
+accessibility audit. None of this changed Activity 1 or 2's graded code.
 
 ## See It Live
 
 **https://jdsaire.github.io/frontend_c6_ecommerce/**
 
 Click "Products" to browse the storefront: filter by category, sort by
-price, and add items to your cart. Activity 1's original test page still
+price, reveal more with "Show more", and add items to your cart. Activity 1's original test page still
 exists at `/cart-test` — it's just no longer linked in the sidebar, since
 it was built for grading evidence rather than as something a shopper
 browses into. See [`docs/how-to-run.md`](docs/how-to-run.md) for every way
@@ -53,6 +54,18 @@ for GitHub Codespaces and VS Code instructions.
   additions on top of Activity 1/2's classes and component parameters, not
   replacements for them — see [`docs/storefront-decisions.md`](docs/storefront-decisions.md)
   for the deferred and resolved design decisions behind it.
+- **v2.2 — Last changes**: removed Home's sale-campaign preview section,
+  fixed the header cart summary's alignment below desktop, and added
+  progressive "Show more" paging to the storefront grid. See
+  [`handoff/v2.2/`](handoff/v2.2/README.md).
+- **Activity 3 — Responsive UI/UX**: a dedicated
+  [`site.css`](src/ShopEase/wwwroot/css/site.css) holding this project's own
+  styling, a strengthened visual hierarchy on
+  [`ProductCard`](src/ShopEase/Pages/ProductCard.razor) and the storefront
+  grid, mobile/tablet/desktop breakpoints, and an accessibility pass (WCAG
+  AA contrast, keyboard operability, visible focus indicators). See
+  [`docs/activity-3-decisions.md`](docs/activity-3-decisions.md) and
+  [`handoff/v3/`](handoff/v3/README.md).
 
 ## Documentation
 
@@ -78,18 +91,14 @@ authentication, or any server-side component exists.
 
 ## Out of Scope (So Far)
 
-Activities 1 and 2 are graded and complete; the storefront bridge extended
-their UI without altering that graded code. Three activities, plus the parts
-of the storefront bridge that fall under them, are still separate, later
-deliveries against this same repository:
+Activities 1, 2, and 3 are graded and complete; the storefront bridge and
+Activity 3 extended the UI without altering that graded code. Two activities
+are still separate, later deliveries against this same repository:
 
-- **Activity 3** — UI/UX styling and responsive design: media queries and
-  responsive breakpoints (the storefront bridge's styling pass is desktop
-  only), plus an accessibility audit.
 - **Activity 4** — secure coding practices and authentication.
-- **Activity 5** — persisted state management. The storefront bridge's cart
-  state does not survive a page refresh, by design — that's this activity's
-  job, not an oversight here.
+- **Activity 5** — persisted state management. The cart's state does not
+  survive a page refresh, by design — that's this activity's job, not an
+  oversight here.
 
 Also deferred, recorded in [`docs/storefront-decisions.md`](docs/storefront-decisions.md):
 out-of-stock and insufficient-stock enforcement. `Stock` is displayed on

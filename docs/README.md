@@ -11,6 +11,9 @@ Operational documentation for running, setting up, and grading this project.
 - [`storefront-decisions.md`](storefront-decisions.md) — why stock is
   displayed but not enforced, and why cart-line removal is a separate
   explicit control rather than decrementing quantity to zero.
+- [`activity-3-decisions.md`](activity-3-decisions.md) — why `site.css`
+  exists alongside `app.css`, the chosen responsive breakpoints, the
+  show-more-over-pagination tradeoff, and the `/cart-test` scope boundary.
 
 Looking for a plain-language explanation of *how* the app works, rather than
 how to run it? See [`../learning-mode/`](../learning-mode/README.md) instead.

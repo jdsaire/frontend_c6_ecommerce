@@ -4,9 +4,13 @@ Every routable page in the app, plus one component that technically isn't one.
 
 - [`Home.razor`](Home.razor) — the landing page at `/`. Rebuilt in the
   storefront-bridge run from the untouched scaffold template into a page
-  that introduces ShopEase and routes into the storefront, with a small
-  sale-campaign preview. It does not inject `Cart` and does not show cart
-  contents — Home presents and links to the cart, it isn't the cart.
+  that introduces ShopEase and routes into the storefront. Originally also
+  carried a small sale-campaign preview section; that section was removed
+  in the v2.2 run as dead weight ahead of Activity 3 (see
+  [`../../../handoff/v2.2/README.md`](../../../handoff/v2.2/README.md)), so
+  Home is now just the hero and its call-to-action. It does not inject
+  `Cart` and does not show cart contents — Home presents and links to the
+  cart, it isn't the cart.
 - [`NotFound.razor`](NotFound.razor) — the scaffold's default 404 fallback,
   kept unchanged.
 - [`CartTest.razor`](CartTest.razor) — Activity 1's required test program,
@@ -24,10 +28,13 @@ Every routable page in the app, plus one component that technically isn't one.
   `OnDecrement`, `OnRemove`) alongside the original two, which are
   untouched. See below for why it lives in this folder.
 - [`Products.razor`](Products.razor) — the storefront page at `/products`: a
-  card grid, category filter, price sort, and an on-page cart summary, all
-  wired to the shared `Cart`. Originally Activity 2's product listing page;
-  rebuilt in the storefront-bridge run, with the Activity 2 assignment
-  narration removed.
+  card grid, category filter, price sort, progressive "Show more" paging,
+  and an on-page cart summary, all wired to the shared `Cart`. Originally
+  Activity 2's product listing page; rebuilt in the storefront-bridge run
+  with the Activity 2 assignment narration removed, then given show-more
+  paging in the v2.2 run — see
+  [`../../../docs/activity-3-decisions.md`](../../../docs/activity-3-decisions.md)
+  for why paging beats pagination here.
 
 ## Why ProductCard.razor Is Here, Not in a Components Folder
 
