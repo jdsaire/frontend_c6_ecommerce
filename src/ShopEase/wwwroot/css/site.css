@@ -1,7 +1,10 @@
 /* ================================================================
-   ShopEase storefront — baseline retail styling (storefront bridge)
-   Desktop presentation only; responsive breakpoints and media queries
-   are Activity 3's scope, not this pass's.
+   ShopEase storefront styling.
+   Mobile-first: base rules below target narrow viewports; the
+   responsive breakpoints section at the end of this file layers on
+   tablet (>=641px) and desktop (>=1025px) adjustments, matching the
+   641px cutover already used by Layout/MainLayout.razor.css and
+   Layout/NavMenu.razor.css.
    ================================================================ */
 
 :root {
@@ -23,7 +26,7 @@
 }
 
 .landing-hero h1 {
-    font-size: 2.5rem;
+    font-size: 1.85rem;
     margin-bottom: 0.5rem;
 }
 
@@ -44,8 +47,9 @@
 
 .storefront-toolbar {
     display: flex;
-    gap: 1.5rem;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
     margin-bottom: 1.5rem;
     padding: 0.75rem 1rem;
     background: #f7f9fb;
@@ -78,7 +82,7 @@
 
 .storefront-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: 1fr;
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -216,8 +220,8 @@
 .cart-summary {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.4rem 0.9rem;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
     border-radius: 999px;
     background: var(--shopease-accent);
     color: #fff;
@@ -244,4 +248,37 @@
 
 .cart-summary__total {
     font-size: 0.95rem;
+}
+
+/* ================================================================
+   Responsive breakpoints — mobile (base, above), tablet, desktop.
+   641px matches the sidebar/nav cutover already used by
+   Layout/MainLayout.razor.css and Layout/NavMenu.razor.css.
+   ================================================================ */
+
+@media (min-width: 641px) {
+    .landing-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .storefront-toolbar {
+        flex-direction: row;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .storefront-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cart-summary {
+        gap: 0.5rem;
+        padding: 0.4rem 0.9rem;
+    }
+}
+
+@media (min-width: 1025px) {
+    .storefront-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
