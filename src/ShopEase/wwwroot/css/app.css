@@ -199,6 +199,19 @@ code {
     margin-bottom: 2rem;
 }
 
+.storefront-show-more {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin: -0.5rem 0 2rem;
+}
+
+.storefront-show-more__count {
+    color: var(--shopease-muted);
+    margin: 0;
+}
+
 .product-card {
     display: flex;
     flex-direction: column;
