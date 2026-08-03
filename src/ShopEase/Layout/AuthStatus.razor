@@ -1,0 +1,20 @@
+@inject AuthenticationStateProvider AuthStateProvider
+
+<div class="auth-status">
+    <AuthorizeView Context="authState">
+        <Authorized>
+            <span class="auth-status__name">Signed in as @authState.User.Identity?.Name</span>
+            <button type="button" class="auth-status__signout" @onclick="HandleSignOut">Sign out</button>
+        </Authorized>
+        <NotAuthorized>
+            <a class="auth-status__signin" href="/login">Sign in</a>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    private void HandleSignOut()
+    {
+        ((DemoAuthenticationStateProvider)AuthStateProvider).MarkUserAsLoggedOut();
+    }
+}
