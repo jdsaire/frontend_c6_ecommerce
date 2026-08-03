@@ -156,52 +156,6 @@ code {
     text-decoration: none;
 }
 
-.landing-sale h2 {
-    margin-bottom: 1rem;
-}
-
-.landing-sale__grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-}
-
-.landing-sale__item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-    border: 1px solid var(--shopease-border);
-    border-radius: 10px;
-    padding: 1rem;
-    background: var(--shopease-surface);
-    transition: box-shadow 0.15s ease, transform 0.15s ease;
-}
-
-.landing-sale__item:hover {
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    transform: translateY(-2px);
-}
-
-.landing-sale__item img {
-    width: 100%;
-    max-width: 120px;
-    aspect-ratio: 1 / 1;
-    object-fit: contain;
-    margin-bottom: 0.75rem;
-}
-
-.landing-sale__name {
-    font-weight: 600;
-    text-align: center;
-}
-
-.landing-sale__price {
-    color: var(--shopease-accent);
-    font-weight: 700;
-}
-
 /* ---- Storefront toolbar (filters/sort) ---- */
 
 .storefront-toolbar {
