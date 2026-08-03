@@ -19,12 +19,13 @@ public static class InputValidationService
 {
     /// <summary>
     /// Letters, digits, spaces, and the punctuation that legitimately appears in this
-    /// app's catalog names and shipping addresses (hyphen, ampersand, apostrophe, period,
-    /// comma, slash, hash). Deliberately permissive enough that real values like
-    /// "27-Inch Monitor", "USB-C Hub", or "Apt #4" are never rejected — an allow-list that
-    /// rejects legitimate input is a bug, not a stricter defense.
+    /// app's catalog names, shipping addresses, and usernames (hyphen, ampersand,
+    /// apostrophe, period, comma, slash, hash, underscore). Deliberately permissive
+    /// enough that real values like "27-Inch Monitor", "USB-C Hub", "Apt #4", or
+    /// "demo_shopper1" are never rejected — an allow-list that rejects legitimate input
+    /// is a bug, not a stricter defense.
     /// </summary>
-    public const string SafeTextPattern = @"^[\p{L}\p{N} .,&'\-/#]*$";
+    public const string SafeTextPattern = @"^[\p{L}\p{N} .,&'\-/#_]*$";
 
     /// <summary>
     /// Case-insensitive check for the metacharacter patterns associated with SQL
