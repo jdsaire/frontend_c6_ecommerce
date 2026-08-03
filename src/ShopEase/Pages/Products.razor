@@ -34,7 +34,7 @@
     </div>
 
     <div class="storefront-grid">
-        @foreach (var product in _displayedProducts)
+        @foreach (var product in _displayedProducts.Take(_visibleCount))
         {
             <ProductCard Product="product"
                          Quantity="Cart.GetQuantity(product.ProductID)"
@@ -42,6 +42,18 @@
                          OnIncrement="HandleIncrement"
                          OnDecrement="HandleDecrement"
                          OnRemove="HandleRemove" />
+        }
+    </div>
+
+    <div class="storefront-show-more">
+        <p class="storefront-show-more__count" aria-live="polite">
+            Showing @Math.Min(_visibleCount, _displayedProducts.Count) of @_displayedProducts.Count products
+        </p>
+        @if (_visibleCount < _displayedProducts.Count)
+        {
+            <button type="button" class="btn btn-primary storefront-show-more__button" @onclick="ShowMore">
+                Show more
+            </button>
         }
     </div>
 
@@ -65,11 +77,14 @@
 </section>
 
 @code {
+    private const int PageSize = 6;
+
     private List<Product> _products = new();
     private List<Product> _displayedProducts = new();
     private List<string> _categories = new();
     private string _selectedCategory = "All";
     private string _sortOrder = "none";
+    private int _visibleCount = PageSize;
 
     protected override void OnInitialized()
     {
@@ -90,6 +105,13 @@
             "price-desc" => filtered.OrderByDescending(p => p.Price).ToList(),
             _ => filtered.ToList(),
         };
+
+        _visibleCount = PageSize;
+    }
+
+    private void ShowMore()
+    {
+        _visibleCount = Math.Min(_visibleCount + PageSize, _displayedProducts.Count);
     }
 
     private void HandleAddToCart(Product product)
