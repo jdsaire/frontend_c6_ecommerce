@@ -23,6 +23,10 @@ repository.
   `AuthorizeView` abstraction, cart gating on sign-in, and a security test
   pass, combined with a patch adding a checkout screen and retroactive
   Activity-3-equivalent styling/accessibility coverage for both new screens.
+- [`v4.1/`](v4.1/README.md) — three surgical fixes found by using the app
+  after `v4` merged: a critical navigation regression (base-relative hrefs
+  restored), a search field rebuilt with a clear control and catalog
+  autocomplete, and a header-spacing fix.
 
 Each run's plan and completion report live together in its own `v{N}/`
 subfolder, so the reasoning behind a given set of commits stays attached to

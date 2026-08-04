@@ -53,6 +53,15 @@ and 3:1 for larger text and meaningful UI boundaries like borders; this
 project's border color was measured, found short of that at about 1.26:1, and
 replaced with one measuring about 3.62:1. Covered in [03, "Accessibility: Contrast, Keyboard Use, and Focus."](03-Responsive-UI-and-Accessibility.md#accessibility-contrast-keyboard-use-and-focus)
 
+## Combobox
+
+An accessible UI pattern pairing a text input with a list of suggestions the visitor can
+navigate with the keyboard as well as the mouse — `role="combobox"` on the input,
+`role="listbox"` on the suggestion list, with ARIA attributes (`aria-expanded`,
+`aria-controls`, `aria-activedescendant`) tying the two together so assistive technology
+tracks which suggestion is active. The storefront's search box uses this pattern for its
+catalog autocomplete. Covered in [04, "The Search Box, Rebuilt as a Combobox."](04-Input-Validation-and-Authentication.md#the-search-box-rebuilt-as-a-combobox)
+
 ## Component
 
 A self-contained, reusable chunk of a Blazor app that bundles its own markup (what
