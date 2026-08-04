@@ -33,6 +33,12 @@
             </select>
         </label>
 
+        @* A plain <input> rather than <InputText> deliberately: this is an ARIA
+           combobox, which needs per-keystroke value control plus its own keydown
+           handling, and <InputText> cannot combine @bind-Value:event="oninput"
+           with @bind-Value:after. Validation is unchanged — the same SearchModel,
+           EditContext, DataAnnotationsValidator, and ValidationMessage still drive
+           it, via the explicit _searchEditContext.Validate() call in ApplyFilters. *@
         <EditForm EditContext="_searchEditContext" class="storefront-filter storefront-search">
             <DataAnnotationsValidator />
             <svg class="storefront-filter__icon" viewBox="0 0 16 16" aria-hidden="true">
@@ -40,12 +46,58 @@
                 <path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
             </svg>
             <label for="storefront-search-input" class="visually-hidden">Search products</label>
-            <InputText id="storefront-search-input"
+
+            <div class="storefront-search__control">
+                <input id="storefront-search-input"
+                       @ref="_searchInput"
                        class="storefront-search__input"
+                       type="text"
                        placeholder="Search products…"
                        maxlength="60"
-                       @bind-Value="_searchModel.Term"
-                       @bind-Value:after="ApplyFilters" />
+                       autocomplete="off"
+                       role="combobox"
+                       aria-expanded="@(_suggestionsOpen ? "true" : "false")"
+                       aria-controls="storefront-search-suggestions"
+                       aria-autocomplete="list"
+                       aria-activedescendant="@ActiveSuggestionId"
+                       value="@_searchModel.Term"
+                       @oninput="HandleSearchInput"
+                       @onkeydown="HandleSearchKeyDown"
+                       @onblur="CloseSuggestions" />
+
+                @if (!string.IsNullOrEmpty(_searchModel.Term))
+                {
+                    <button type="button" class="storefront-search__clear"
+                            aria-label="Clear search" title="Clear search"
+                            @onclick="ClearSearch">
+                        &times;
+                    </button>
+                }
+
+                @* Always rendered so aria-controls always points at a real element,
+                   hidden via the attribute rather than a CSS :empty rule, which
+                   stray whitespace text nodes would defeat. *@
+                <ul id="storefront-search-suggestions" class="storefront-search__suggestions"
+                    role="listbox" aria-label="Product suggestions" hidden="@(!_suggestionsOpen)">
+                    @if (_suggestionsOpen)
+                    {
+                        @for (var i = 0; i < _suggestions.Count; i++)
+                        {
+                            var index = i;
+                            var suggestion = _suggestions[index];
+                            <li id="@SuggestionId(index)"
+                                class="storefront-search__suggestion@(index == _activeSuggestionIndex ? " storefront-search__suggestion--active" : "")"
+                                role="option"
+                                aria-selected="@(index == _activeSuggestionIndex ? "true" : "false")"
+                                @onmousedown:preventDefault="true"
+                                @onclick="@(() => SelectSuggestion(suggestion))">
+                                @suggestion
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
             <ValidationMessage For="@(() => _searchModel.Term)" class="storefront-search__error" aria-live="polite" />
         </EditForm>
     </div>
@@ -110,13 +162,13 @@
             <p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
             <AuthorizeView Context="checkoutAuthState">
                 <Authorized>
-                    <a class="btn btn-primary storefront-cart-summary__checkout" href="/checkout">
+                    <a class="btn btn-primary storefront-cart-summary__checkout" href="checkout">
                         Proceed to Checkout
                     </a>
                 </Authorized>
                 <NotAuthorized>
                     <p class="storefront-cart-summary__signin-note">
-                        <a href="/login">Sign in</a> to proceed to checkout.
+                        <a href="login">Sign in</a> to proceed to checkout.
                     </p>
                 </NotAuthorized>
             </AuthorizeView>
@@ -145,21 +197,57 @@
 
     private readonly SearchModel _searchModel = new();
     private EditContext _searchEditContext = default!;
+    private bool _searchIsValid = true;
+
+    // Autocomplete state. Suggestions are drawn from the catalog itself, so a
+    // selected suggestion is always a real product keyword -- but it still goes
+    // through the same validation path as anything typed by hand.
+    private const int MinSuggestionLength = 2;
+    private const int MaxSuggestions = 6;
+    private static readonly char[] KeywordSeparators = { ' ', '-', '/' };
+
+    private ElementReference _searchInput;
+    private List<string> _catalogKeywords = new();
+    private List<string> _suggestions = new();
+    private int _activeSuggestionIndex = -1;
+    private bool _suggestionsOpen;
+
+    private string? ActiveSuggestionId =>
+        _suggestionsOpen && _activeSuggestionIndex >= 0 ? SuggestionId(_activeSuggestionIndex) : null;
+
+    private static string SuggestionId(int index) => $"storefront-search-suggestion-{index}";
 
     protected override void OnInitialized()
     {
         _products = MockProductData.GetSeedProducts();
         _categories = _products.Select(p => p.Category).Distinct().OrderBy(c => c).ToList();
+        _catalogKeywords = BuildCatalogKeywords(_products);
         _searchEditContext = new EditContext(_searchModel);
         ApplyFilters();
     }
 
+    // One distinct, title-cased keyword per meaningful word in the catalog's product
+    // names, so typing "la" can offer both "Lamp" (from "Desk Lamp") and "Laptop"
+    // rather than only matching names that start with the typed text. Fragments with
+    // no letters ("27") or shorter than three characters are dropped as noise.
+    private static List<string> BuildCatalogKeywords(IEnumerable<Product> products)
+    {
+        return products
+            .SelectMany(p => p.Name.Split(KeywordSeparators, StringSplitOptions.RemoveEmptyEntries))
+            .Select(word => word.Trim())
+            .Where(word => word.Length >= 3 && word.Any(char.IsLetter))
+            .Select(word => char.ToUpperInvariant(word[0]) + word[1..])
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(word => word, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
     private void ApplyFilters()
     {
-        // Validate on every keystroke (@bind-Value:after) so the inline message tracks
-        // live typing instead of waiting for a submit this form never has.
-        var searchIsValid = _searchEditContext.Validate();
-        var searchTerm = searchIsValid ? InputValidationService.Sanitize(_searchModel.Term) : string.Empty;
+        // Validate on every keystroke so the inline message tracks live typing
+        // instead of waiting for a submit this form never has.
+        _searchIsValid = _searchEditContext.Validate();
+        var searchTerm = _searchIsValid ? InputValidationService.Sanitize(_searchModel.Term) : string.Empty;
 
         IEnumerable<Product> filtered = _selectedCategory == "All"
             ? _products
@@ -178,6 +266,111 @@
         };
 
         _visibleCount = PageSize;
+    }
+
+    private void HandleSearchInput(ChangeEventArgs e)
+    {
+        _searchModel.Term = e.Value?.ToString() ?? string.Empty;
+        _activeSuggestionIndex = -1;
+        ApplyFilters();
+        UpdateSuggestions();
+    }
+
+    private void UpdateSuggestions()
+    {
+        var term = _searchModel.Term.Trim();
+
+        if (term.Length < MinSuggestionLength || !_searchIsValid)
+        {
+            _suggestions = new List<string>();
+            _suggestionsOpen = false;
+            return;
+        }
+
+        _suggestions = _catalogKeywords
+            .Where(keyword => keyword.StartsWith(term, StringComparison.OrdinalIgnoreCase)
+                              && !keyword.Equals(term, StringComparison.OrdinalIgnoreCase))
+            .Take(MaxSuggestions)
+            .ToList();
+
+        _suggestionsOpen = _suggestions.Count > 0;
+    }
+
+    private void SelectSuggestion(string suggestion)
+    {
+        _searchModel.Term = suggestion;
+        CloseSuggestions();
+        ApplyFilters();
+    }
+
+    private void CloseSuggestions()
+    {
+        _suggestionsOpen = false;
+        _activeSuggestionIndex = -1;
+    }
+
+    private async Task ClearSearch()
+    {
+        _searchModel.Term = string.Empty;
+        _suggestions = new List<string>();
+        CloseSuggestions();
+        ApplyFilters();
+
+        // Return focus to the field rather than stranding it on a button that is
+        // about to disappear, so a keyboard user can keep typing immediately.
+        await _searchInput.FocusAsync();
+    }
+
+    private void HandleSearchKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowDown":
+                if (!_suggestionsOpen)
+                {
+                    UpdateSuggestions();
+                }
+
+                if (_suggestions.Count > 0)
+                {
+                    _activeSuggestionIndex = (_activeSuggestionIndex + 1) % _suggestions.Count;
+                }
+
+                break;
+
+            case "ArrowUp":
+                if (_suggestions.Count > 0)
+                {
+                    _activeSuggestionIndex = _activeSuggestionIndex <= 0
+                        ? _suggestions.Count - 1
+                        : _activeSuggestionIndex - 1;
+                }
+
+                break;
+
+            case "Enter":
+                if (_suggestionsOpen && _activeSuggestionIndex >= 0)
+                {
+                    SelectSuggestion(_suggestions[_activeSuggestionIndex]);
+                }
+
+                break;
+
+            case "Escape":
+                // Standard combobox behavior: the first Escape dismisses the list,
+                // a second one clears the field.
+                if (_suggestionsOpen)
+                {
+                    CloseSuggestions();
+                }
+                else if (_searchModel.Term.Length > 0)
+                {
+                    _searchModel.Term = string.Empty;
+                    ApplyFilters();
+                }
+
+                break;
+        }
     }
 
     private void ShowMore()
