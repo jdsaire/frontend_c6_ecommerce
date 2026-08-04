@@ -7,9 +7,10 @@ the capstone's five activities, had a storefront-bridge pass that gave it a
 real retail shell — expanded catalog, imagery, quantity controls, filtering,
 a persistent cart summary — completed Activity 3: a full styling and
 responsive-design pass with mobile/tablet/desktop breakpoints and an
-accessibility audit, and has now completed Activity 4: input validation,
-simulated authentication, a gated checkout screen, and a security test
-pass. None of this changed Activity 1 or 2's graded code.
+accessibility audit, completed Activity 4: input validation, simulated
+authentication, a gated checkout screen, and a security test pass, and has
+now closed out three fixes found by using the deployed app afterward. None
+of this changed Activity 1 or 2's graded code.
 
 ## See It Live
 
@@ -81,6 +82,12 @@ for GitHub Codespaces and VS Code instructions.
   see [`docs/security-decisions.md`](docs/security-decisions.md),
   [`docs/security-testing.md`](docs/security-testing.md), and
   [`handoff/v4/`](handoff/v4/README.md).
+- **v4.1 — Post-Activity-4 fixes**: restored working sign-in/checkout
+  navigation on the live deploy (a base-relative-href regression the
+  Activity 4 pass introduced), rebuilt the product search as a full ARIA
+  combobox with a clear control and catalog-derived autocomplete, and
+  separated the header's sign-in status from the cart summary. See
+  [`handoff/v4.1/`](handoff/v4.1/README.md).
 
 ## Documentation
 

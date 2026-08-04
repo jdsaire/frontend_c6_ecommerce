@@ -67,6 +67,28 @@ shows the resulting error next to the field it belongs to. This is the idiomatic
 Blazor expects form validation to be built, which is what Step 1 is really asking to see
 demonstrated — not just "some text got checked somehow."
 
+## The Search Box, Rebuilt as a Combobox
+
+The search box above shipped first as a plain reactive filter: type, and the grid
+narrows. Using it surfaced two gaps — no way to clear it except backspacing, and no help
+finding a product by a partial name — so it was rebuilt as an **ARIA combobox**, the
+standard accessible pattern for a text input paired with a list of suggestions (see
+[Glossary, "Combobox."](Glossary.md#combobox)).
+
+The rebuild required swapping Blazor's `<InputText>` for a plain `<input>`: a combobox
+needs to control its own value on every keystroke *and* handle its own arrow/Enter/Escape
+key presses, and `<InputText>` can't combine `@bind-Value:event="oninput"` with
+`@bind-Value:after` the way that needs. Validation didn't change at all — the same
+`SearchModel`, `EditContext`, `DataAnnotationsValidator`, and `ValidationMessage` from
+the section above still drive it; only the input element itself changed.
+
+Suggestions come from the catalog's own product names — each one split into keywords, so
+typing "la" offers both "Lamp" (from "Desk Lamp") and "Laptop," not just names that
+*start with* what was typed. Because they're drawn from the real catalog, a selected
+suggestion is always a valid product keyword, but it still runs through the same
+validation path as anything typed by hand — the autocomplete is a convenience layered on
+top of validation, not a way around it.
+
 ## Authentication Without a Server
 
 Activity 4's Step 2 names ASP.NET Identity, which needs a real server to run against.
@@ -105,6 +127,17 @@ touched — the four methods Activity 1 fixed
 same as they were in `01-Business-Logic-Foundations.md`. Putting the check there instead
 of inside `Cart` keeps the business-logic class reusable and testable independent of
 however a particular page decides to gate it.
+
+**A note on how those links are written, because getting it wrong broke the deployed
+site**: every "Sign in" link above uses a **base-relative** href (`href="login"`, not
+`href="/login"`). GitHub Pages serves this app under a subpath
+(`/frontend_c6_ecommerce/`), which `wwwroot/index.html`'s `<base href>` tag points at —
+but only in the CI-built output; the tracked source keeps `<base href="/" />` so local
+runs stay simple. A leading-slash href ignores `<base href>` entirely and resolves
+against the site's actual root instead, which is exactly what happened the first time
+these links were written: every sign-in entry point 404'd on the live deploy until the
+hrefs were corrected to match the base-relative convention `NavMenu.razor` already used.
+See [`handoff/v4.1/plan.md`](../handoff/v4.1/plan.md) for the full diagnosis.
 
 ## The Checkout Screen
 
