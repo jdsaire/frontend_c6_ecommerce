@@ -1,4 +1,8 @@
 ﻿@inherits LayoutComponentBase
+@inject Cart Cart
+@inject CartStorageService CartStorageService
+@implements IDisposable
+@using ShopEase.Models
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -15,3 +19,62 @@
         </article>
     </main>
 </div>
+
+@code {
+    // Subscribes to Cart.OnChange so every cart mutation, from any page,
+    // gets saved to localStorage -- the same subscribe/unsubscribe pattern
+    // CartSummary.razor already uses for its own header indicator.
+    protected override void OnInitialized()
+    {
+        Cart.OnChange += HandleCartChanged;
+    }
+
+    // Restores a previously-persisted cart once the circuit has rendered --
+    // IJSRuntime calls need a rendered circuit, so this can't happen in
+    // OnInitializedAsync. Resolves each stored ProductID against the live
+    // catalog and re-adds it through the existing, unmodified
+    // Cart.AddProduct, then notifies and repaints once for the whole batch.
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        var storedProductIds = await CartStorageService.LoadAsync();
+        if (storedProductIds.Count == 0)
+        {
+            return;
+        }
+
+        var catalog = MockProductData.GetSeedProducts();
+        foreach (var productId in storedProductIds)
+        {
+            var product = catalog.FirstOrDefault(p => p.ProductID == productId);
+            if (product is null)
+            {
+                // A stored ID no longer in the catalog -- skip it silently
+                // rather than let a stale value break the restore.
+                Console.WriteLine($"MainLayout: skipping stored cart ProductID {productId} -- no longer in the catalog.");
+                continue;
+            }
+
+            Cart.AddProduct(product);
+        }
+
+        Cart.NotifyChange();
+        StateHasChanged();
+    }
+
+    // Fire-and-forget save: best-effort and idempotent, so not awaiting it
+    // from a plain Action-typed event handler is an acceptable tradeoff.
+    private async void HandleCartChanged()
+    {
+        await CartStorageService.SaveAsync(Cart.Items.Select(p => p.ProductID));
+    }
+
+    public void Dispose()
+    {
+        Cart.OnChange -= HandleCartChanged;
+    }
+}

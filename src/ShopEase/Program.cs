@@ -15,6 +15,10 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddSingleton<ShopDatabase>();
 builder.Services.AddSingleton<Cart>();
 
+// Singleton to match Cart's own lifetime -- IJSRuntime has no lifetime
+// conflict with this either way in Blazor WebAssembly.
+builder.Services.AddSingleton<CartStorageService>();
+
 // Simulated authentication: AddAuthorizationCore wires up the AuthorizeView
 // plumbing without pulling in a server-hosted Identity package.
 // DemoAuthenticationStateProvider is this app's stand-in for the real

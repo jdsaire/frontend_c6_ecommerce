@@ -6,8 +6,9 @@ the term means here, and where to see it in the project. Grows alongside the
 walkthrough files — it currently covers everything introduced in
 [`01-Business-Logic-Foundations.md`](01-Business-Logic-Foundations.md),
 [`02-Building-the-Product-Card.md`](02-Building-the-Product-Card.md),
-[`03-Responsive-UI-and-Accessibility.md`](03-Responsive-UI-and-Accessibility.md), and
-[`04-Input-Validation-and-Authentication.md`](04-Input-Validation-and-Authentication.md).
+[`03-Responsive-UI-and-Accessibility.md`](03-Responsive-UI-and-Accessibility.md),
+[`04-Input-Validation-and-Authentication.md`](04-Input-Validation-and-Authentication.md), and
+[`05-State-Management-and-Persistence.md`](05-State-Management-and-Persistence.md).
 
 ## ARIA live region
 
@@ -147,6 +148,17 @@ cleans up input that's already acceptable.
 is this project's shared validation logic, applied to every text field the
 app accepts. Covered in [04, "What Input Validation and Sanitization Mean."](04-Input-Validation-and-Authentication.md#what-input-validation-and-sanitization-mean)
 
+## JS interop (JavaScript interop)
+
+Blazor's mechanism for calling JavaScript from C# (and back), via
+`IJSRuntime.InvokeAsync`/`InvokeVoidAsync` — needed for browser APIs, like
+`localStorage`, that have no C# equivalent of their own.
+[`cartStorage.js`](../src/ShopEase/wwwroot/js/cartStorage.js) is this
+project's only JS interop: three one-line wrapper functions around
+`window.localStorage`, called from
+[`CartStorageService`](../src/ShopEase/Services/CartStorageService.cs).
+Covered in [05, "JS Interop: How C# Talks to `localStorage`."](05-State-Management-and-Persistence.md#js-interop-how-c-talks-to-localstorage)
+
 ## Keyboard operability
 
 Whether every interactive control can be reached with the Tab key and
@@ -159,6 +171,14 @@ never overrides tab order with a custom `tabindex`. Covered in [03, "Accessibili
 .NET's growable, ordered collection type — the natural fit for "however many
 products happen to be in the cart right now." Both `Cart.Items` and the simulated
 database's internal storage are `List<Product>`. Covered in [01, "The Cart Class."](01-Business-Logic-Foundations.md#the-cart-class-storing-removing-displaying-totaling)
+
+## Local storage
+
+A browser storage API that keeps whatever's written until something explicitly
+clears it — including across closing and reopening the browser entirely. This
+project uses it for the shopping cart, storing a JSON array of `ProductID`
+numbers under the key `shopease.cart.v1`. Contrast with session storage, below.
+Covered in [05, "Local Storage vs. Session Storage."](05-State-Management-and-Persistence.md#local-storage-vs-session-storage)
 
 ## Media query
 
@@ -222,6 +242,14 @@ A `.razor` file marked with an `@page` directive at the top, giving it its own w
 address. `CartTest.razor` is one, reachable at `/cart-test` — still true after
 the storefront-bridge run removed it from the sidebar nav, since removing a nav
 link doesn't remove the `@page` directive underneath it. Covered in [01, "Proving It Works."](01-Business-Logic-Foundations.md#proving-it-works-the-carttest-page)
+
+## Session storage
+
+A browser storage API that survives a page refresh but is cleared the moment
+the tab or browser closes — good for protecting an in-progress form from an
+accidental refresh without meaning to keep it forever. This project doesn't use
+it anywhere: the cart uses local storage instead, and the checkout form isn't
+draft-saved. Covered in [05, "Local Storage vs. Session Storage."](05-State-Management-and-Persistence.md#local-storage-vs-session-storage)
 
 ## Simulated database
 

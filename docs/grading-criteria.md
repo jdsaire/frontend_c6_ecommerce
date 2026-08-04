@@ -30,7 +30,7 @@ The peer-review submission answers these six questions in text-field entries
 
 ## Where This Repository Currently Stands
 
-Activities 1 through 3 are built:
+All five activities are built:
 
 - **Business logic** (question 4, in part): done — see
   [`../learning-mode/01-Business-Logic-Foundations.md`](../learning-mode/01-Business-Logic-Foundations.md).
@@ -39,10 +39,16 @@ Activities 1 through 3 are built:
 - **UI/UX** (question 4, in part): done — styling, responsive breakpoints,
   and an accessibility pass — see
   [`../learning-mode/03-Responsive-UI-and-Accessibility.md`](../learning-mode/03-Responsive-UI-and-Accessibility.md).
-- **Security and state management** (questions 4-6): not yet built. These
-  correspond to Activities 4-5, which are separate, later deliveries against
-  this same repository.
+- **Security** (questions 4-5): done — input validation, simulated
+  authentication, and a security test pass — see
+  [`../learning-mode/04-Input-Validation-and-Authentication.md`](../learning-mode/04-Input-Validation-and-Authentication.md)
+  and [`security-decisions.md`](security-decisions.md).
+- **State management** (questions 4 and 6): done — cart persistence via
+  local storage, surviving both a refresh and closing the tab — see
+  [`../learning-mode/05-State-Management-and-Persistence.md`](../learning-mode/05-State-Management-and-Persistence.md)
+  and [`state-management-decisions.md`](state-management-decisions.md).
 
-Since the submission questions are answered outside this repository, this
-file exists purely so the grading breakdown and question list are on record
-alongside the code they'll eventually be written about.
+There is no Activity 6 — this is the project's last graded code. Since the
+submission questions are answered outside this repository, this file exists
+purely so the grading breakdown and question list are on record alongside the
+code they were written about.
