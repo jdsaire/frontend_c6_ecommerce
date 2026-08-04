@@ -8,9 +8,11 @@ real retail shell — expanded catalog, imagery, quantity controls, filtering,
 a persistent cart summary — completed Activity 3: a full styling and
 responsive-design pass with mobile/tablet/desktop breakpoints and an
 accessibility audit, completed Activity 4: input validation, simulated
-authentication, a gated checkout screen, and a security test pass, and has
-now closed out three fixes found by using the deployed app afterward. None
-of this changed Activity 1 or 2's graded code.
+authentication, a gated checkout screen, and a security test pass, closed out
+three fixes found by using the deployed app afterward, and has now completed
+Activity 5: cart persistence via local storage and a final cross-app
+regression pass — the capstone's last graded activity. None of this changed
+Activity 1 or 2's graded code.
 
 ## See It Live
 
@@ -88,6 +90,17 @@ for GitHub Codespaces and VS Code instructions.
   combobox with a clear control and catalog-derived autocomplete, and
   separated the header's sign-in status from the cart summary. See
   [`handoff/v4.1/`](handoff/v4.1/README.md).
+- **Activity 5 — State Management**: the shopping cart now persists to the
+  browser's `localStorage`, surviving both a page refresh and closing the
+  tab, via a new [`CartStorageService`](src/ShopEase/Services/CartStorageService.cs)
+  and [`wwwroot/js/cartStorage.js`](src/ShopEase/wwwroot/js/cartStorage.js)
+  JS interop wrapper, orchestrated entirely from
+  [`MainLayout.razor`](src/ShopEase/Layout/MainLayout.razor) — `Cart.cs`
+  needed zero changes. A final cross-app regression pass confirmed products
+  still display correctly, the cart still updates, and Activity 4's
+  authentication is unchanged. See
+  [`docs/state-management-decisions.md`](docs/state-management-decisions.md)
+  and [`handoff/v5/`](handoff/v5/README.md).
 
 ## Documentation
 
@@ -111,20 +124,13 @@ clearly-labeled in-memory stand-in that mirrors the shape of that requirement
 instead. No file in this repository claims a real database connection, real
 authentication, or any server-side component exists.
 
-## Out of Scope (So Far)
+## Out of Scope
 
-Activities 1, 2, and 3 are graded and complete; the storefront bridge and
-Activity 3 extended the UI without altering that graded code. Two activities
-are still separate, later deliveries against this same repository:
-
-- **Activity 4** — secure coding practices and authentication.
-- **Activity 5** — persisted state management. The cart's state does not
-  survive a page refresh, by design — that's this activity's job, not an
-  oversight here.
-
-Also deferred, recorded in [`docs/storefront-decisions.md`](docs/storefront-decisions.md):
-out-of-stock and insufficient-stock enforcement. `Stock` is displayed on
-every card but not yet checked against cart quantity.
+All five graded activities are complete — there is no Activity 6. One item
+remains deliberately deferred, recorded in
+[`docs/storefront-decisions.md`](docs/storefront-decisions.md): out-of-stock
+and insufficient-stock enforcement. `Stock` is displayed on every card but not
+yet checked against cart quantity.
 
 ## Attribution
 
