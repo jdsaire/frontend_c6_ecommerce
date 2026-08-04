@@ -27,6 +27,11 @@ repository.
   after `v4` merged: a critical navigation regression (base-relative hrefs
   restored), a search field rebuilt with a clear control and catalog
   autocomplete, and a header-spacing fix.
+- [`v5/`](v5/README.md) — Activity 5, the capstone's last graded activity:
+  browser-persisted cart state via `localStorage` (surviving both a refresh
+  and closing the tab), wired entirely from `MainLayout.razor` so `Cart.cs`
+  needed zero changes, plus a final cross-app regression and optimization
+  pass.
 
 Each run's plan and completion report live together in its own `v{N}/`
 subfolder, so the reasoning behind a given set of commits stays attached to
