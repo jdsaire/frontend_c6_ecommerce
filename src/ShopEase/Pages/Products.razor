@@ -110,13 +110,13 @@
             <p><strong>Total: $@Cart.CalculateTotal().ToString("F2")</strong></p>
             <AuthorizeView Context="checkoutAuthState">
                 <Authorized>
-                    <a class="btn btn-primary storefront-cart-summary__checkout" href="/checkout">
+                    <a class="btn btn-primary storefront-cart-summary__checkout" href="checkout">
                         Proceed to Checkout
                     </a>
                 </Authorized>
                 <NotAuthorized>
                     <p class="storefront-cart-summary__signin-note">
-                        <a href="/login">Sign in</a> to proceed to checkout.
+                        <a href="login">Sign in</a> to proceed to checkout.
                     </p>
                 </NotAuthorized>
             </AuthorizeView>
