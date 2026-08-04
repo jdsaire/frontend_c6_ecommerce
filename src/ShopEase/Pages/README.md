@@ -32,8 +32,14 @@ Every routable page in the app, plus one component that technically isn't one.
   anything about authentication. See below for why it lives in this folder.
 - [`Products.razor`](Products.razor) — the storefront page at `/products`: a
   card grid, category filter, price sort, progressive "Show more" paging,
-  an `EditForm`-based product search (Activity 4), and an on-page cart
-  summary, all wired to the shared `Cart`. Each `ProductCard` is wrapped in
+  an `EditForm`-validated product search with a clear control and catalog
+  autocomplete (Activity 4), and an on-page cart summary, all wired to the
+  shared `Cart`. The search field is an ARIA combobox: suggestions are
+  derived from the catalog's own product-name keywords, navigable with the
+  arrow keys, selectable with Enter or a click, and dismissible with Escape.
+  It uses a plain `<input>` rather than `<InputText>` because a combobox
+  needs per-keystroke value and keydown control — validation still runs
+  through the same model, `EditContext`, and `ValidationMessage`. Each `ProductCard` is wrapped in
   `<AuthorizeView>` so signed-out visitors see a sign-in prompt instead of
   the add-to-cart controls, and the cart summary's "Proceed to Checkout"
   link is gated the same way. Originally Activity 2's product listing page;

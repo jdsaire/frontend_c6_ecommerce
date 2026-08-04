@@ -267,6 +267,7 @@
 .product-card__remove:focus,
 .storefront-filter select:focus,
 .storefront-search__input:focus,
+.storefront-search__clear:focus,
 .product-card__signin-prompt:focus,
 .storefront-cart-summary__checkout:focus,
 .auth-form__input:focus,
@@ -296,21 +297,99 @@
 .storefront-search {
     flex: 1;
     min-width: 0;
+    /* Lets the validation message drop onto its own line below the field
+       instead of competing with it for horizontal room. */
+    flex-wrap: wrap;
+}
+
+.storefront-search__control {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
 }
 
 .storefront-search__input {
-    flex: 1;
+    width: 100%;
     min-width: 0;
     border: 1px solid var(--shopease-border);
     border-radius: 6px;
-    padding: 0.35rem 0.6rem;
+    /* Extra right padding keeps typed text clear of the clear button. */
+    padding: 0.35rem 2rem 0.35rem 0.6rem;
     background: var(--shopease-surface);
     font-size: 0.95rem;
     color: var(--shopease-ink);
 }
 
+.storefront-search__clear {
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--shopease-muted);
+    font-size: 1.15rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.storefront-search__clear:hover {
+    color: var(--shopease-ink);
+    background: #eef4fb;
+}
+
+/* ---- Autocomplete listbox ----
+   Suggestions come from the catalog's own product names, so the list can only
+   ever offer real keywords. --shopease-ink on the #eef4fb active row measures
+   14.90:1, and the accent edge marking that row measures 4.68:1 against it —
+   both clear of their thresholds. The active row is marked by an inset edge as
+   well as a fill, so the selection is not signalled by color alone. */
+
+.storefront-search__suggestions {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: var(--shopease-surface);
+    border: 1px solid var(--shopease-border);
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.storefront-search__suggestions[hidden] {
+    display: none;
+}
+
+.storefront-search__suggestion {
+    padding: 0.4rem 0.6rem;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    color: var(--shopease-ink);
+    cursor: pointer;
+}
+
+.storefront-search__suggestion:hover,
+.storefront-search__suggestion--active {
+    background: #eef4fb;
+    box-shadow: inset 3px 0 0 var(--shopease-accent);
+}
+
 .storefront-search__error {
     display: block;
+    flex-basis: 100%;
     font-size: 0.8rem;
     margin: 0.25rem 0 0;
 }
