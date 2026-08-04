@@ -405,6 +405,12 @@
     align-items: center;
     gap: 0.6rem;
     font-size: 0.9rem;
+    /* The top-row is a flex container with no gap of its own, so without this
+       the sign-in status sits flush against the cart summary next to it. Matches
+       the 1.5rem already used between items in that row by
+       Layout/MainLayout.razor.css. Applies at every breakpoint — nothing
+       overrides it in the media queries below. */
+    margin-right: 1.5rem;
 }
 
 .auth-status__name {
